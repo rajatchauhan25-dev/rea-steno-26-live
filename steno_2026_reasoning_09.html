@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>STENO 2026 REASONING 09</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --zoom: 1;
+    --blue:#3b6df0;
+    --blue-dark:#2952c8;
+    --blue-light:#eaf0ff;
+    --green:#17a668;
+    --green-dark:#0f8a56;
+    --purple:#8b3fe8;
+    --red:#f0432f;
+    --grey:#9aa2b1;
+    --ink:#1a2233;
+    --panel-border:#e2e6ee;
+    --bg:#f4f6fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;font-family:'Inter',Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:calc(14px * var(--zoom));}
+  h1,h2,h3{font-family:'Poppins',Arial,sans-serif;}
+  a{cursor:pointer;}
+  img{max-width:100%;height:auto;}
+
+  /* ============ WELCOME PAGE ============ */
+  .welcomewrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .welcomecard{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:40px 36px;text-align:center;box-shadow:0 20px 60px rgba(30,40,80,.14);}
+  .welcomecard .logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#3b6df0,#8b3fe8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;margin:0 auto 18px;box-shadow:0 6px 18px rgba(59,109,240,.35);}
+  .welcomecard h1{font-size:23px;margin:0 0 8px;letter-spacing:.2px;}
+  .welcomecard .wsub{color:#6b7280;font-size:14px;margin-bottom:26px;}
+  .welcome-stats{display:flex;justify-content:center;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+  .welcome-stats div{background:#f4f6fb;border-radius:12px;padding:12px 18px;min-width:100px;}
+  .welcome-stats b{display:block;font-size:19px;font-family:'Poppins',sans-serif;color:var(--blue-dark);}
+  .welcome-stats span{font-size:11.5px;color:#7a8194;}
+  .timer-set{margin-bottom:28px;}
+  .timer-set label{display:block;font-weight:700;font-size:14px;margin-bottom:10px;color:var(--ink);}
+  .timer-set .timer-input-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+  .timer-set input[type=number]{width:90px;padding:10px 12px;font-size:18px;font-weight:700;text-align:center;border:2px solid var(--panel-border);border-radius:10px;font-family:inherit;color:var(--blue-dark);}
+  .timer-set input[type=number]:focus{outline:none;border-color:var(--blue);}
+  .timer-set .unit{font-weight:600;color:#555;}
+  .timer-set .hint{font-size:11.5px;color:#9aa2b1;margin-top:8px;}
+  .timer-set .hint.err{color:var(--red);font-weight:600;}
+  .startbtn{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;border:none;padding:14px 40px;border-radius:11px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(23,166,104,.35);transition:.15s;}
+  .startbtn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(23,166,104,.45);}
+
+  /* ============ HEADER ============ */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#fff;border-bottom:1px solid #eceff5;flex-wrap:wrap;gap:8px;box-shadow:0 1px 3px rgba(20,30,60,.04);}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b6df0,#8b3fe8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;box-shadow:0 3px 8px rgba(59,109,240,.35);}
+  .btn{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:8px 15px;border-radius:7px;font-weight:600;font-size:calc(13px*var(--zoom));cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;box-shadow:0 2px 6px rgba(59,109,240,.28);}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(59,109,240,.38);}
+  .btn:active{transform:translateY(0);}
+  .btn.submitbtn{background:linear-gradient(135deg,#17a668,#0f8a56);box-shadow:0 2px 6px rgba(23,166,104,.35);}
+  .btn.submitbtn:hover{box-shadow:0 5px 14px rgba(23,166,104,.45);}
+  .btn-outline{background:#fff;color:var(--blue);border:1.5px solid var(--blue);padding:5px 11px;border-radius:7px;font-size:calc(12px*var(--zoom));font-weight:600;cursor:pointer;transition:.12s;}
+  .btn-outline:hover{background:var(--blue-light);}
+  .title-block{text-align:center;font-weight:700;font-size:calc(19px*var(--zoom));line-height:1.25;flex:1;min-width:260px;letter-spacing:.2px;}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .timeleft{font-weight:700;font-size:calc(15px*var(--zoom));background:#fff3f0;padding:6px 12px;border-radius:8px;border:1px solid #ffd9d1;}
+  .timeleft span{color:var(--red);}
+  .pausebtn{display:flex;align-items:center;gap:5px;font-weight:600;color:var(--ink);background:#eef1f7;border:none;cursor:pointer;font-size:calc(13px*var(--zoom));padding:7px 12px;border-radius:8px;transition:.12s;}
+  .pausebtn:hover{background:#e3e7f1;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#555,#222);}
+
+  /* ============ SUBBAR ============ */
+  .subbar{display:flex;justify-content:space-between;align-items:center;padding:8px 18px;flex-wrap:wrap;gap:6px;background:#fff;border-bottom:1px solid #eceff5;}
+  .subbar a{color:var(--red);font-weight:700;text-decoration:none;margin-right:16px;font-size:calc(12.5px*var(--zoom));border-bottom:2px solid transparent;transition:.12s;}
+  .subbar a:hover{border-bottom-color:var(--red);}
+  .qanswered{font-weight:700;font-size:calc(13px*var(--zoom));}
+  .qanswered span{color:#e08e00;background:#fff6e5;padding:2px 9px;border-radius:6px;}
+
+  /* ============ CONTROL ROW ============ */
+  .controlrow{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;flex-wrap:wrap;gap:8px;}
+  .section-tab{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:calc(14px*var(--zoom));box-shadow:0 3px 8px rgba(23,166,104,.3);}
+  .navbtns{display:flex;gap:9px;flex-wrap:wrap;}
+  .navbtns .btn{padding:10px 17px;}
+  .collapse-arrow{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;user-select:none;background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:50%;box-shadow:0 3px 8px rgba(59,109,240,.3);transition:.15s;}
+  .collapse-arrow:hover{transform:scale(1.08);}
+
+  /* ============ MAIN LAYOUT ============ */
+  .mainwrap{display:flex;gap:0;padding:6px 18px 18px;align-items:flex-start;}
+  .qpanel{flex:1;border:1px solid var(--panel-border);border-radius:12px;min-height:520px;background:#fff;box-shadow:0 4px 18px rgba(30,40,80,.06);overflow:hidden;}
+  .qpanel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #f0f2f7;flex-wrap:wrap;gap:8px;background:linear-gradient(180deg,#fbfcff,#fff);}
+  .qpanel-head h3{margin:0;font-size:calc(17px*var(--zoom));color:var(--blue-dark);}
+  .lang-select{padding:5px 9px;border:1px solid #d8dded;border-radius:6px;font-family:inherit;}
+  .qbody{padding:22px 24px;font-size:calc(15.5px*var(--zoom));line-height:1.6;}
+  .qtext{margin-bottom:16px;font-weight:500;}
+  .qtext p{margin:0 0 8px;}
+  .qimg-wrap{margin:14px 0 20px;text-align:left;}
+  .qimg-wrap img{max-width:420px;border:1px solid var(--panel-border);border-radius:8px;}
+  .options label{display:flex;align-items:flex-start;gap:10px;margin:10px 0;padding:11px 14px;border-radius:9px;cursor:pointer;font-size:calc(15px*var(--zoom));border:1.5px solid #eef0f6;transition:.12s;}
+  .options label:hover{background:var(--blue-light);border-color:#cdddff;}
+  .options input{margin-top:3px;transform:scale(1.2);accent-color:var(--blue);flex-shrink:0;}
+  .options .opt-content p{margin:0;}
+  .options .opt-content img{max-width:220px;border:1px solid var(--panel-border);border-radius:6px;margin-top:6px;display:block;}
+  .qfooter{display:flex;gap:10px;padding:16px 24px;border-top:1px solid #f0f2f7;flex-wrap:wrap;}
+  .btn-clear{background:#fff;color:#555;border:1.5px solid #d8dded;padding:9px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:.12s;}
+  .btn-clear:hover{background:#f5f6fa;}
+
+  .palette-wrap{width:330px;flex-shrink:0;margin-left:16px;transition:all .2s ease;}
+  .palette-wrap.hidden{width:0;margin-left:0;overflow:hidden;opacity:0;}
+  .palette-title{background:linear-gradient(135deg,#eef1fb,#e6ecff);font-weight:700;text-align:center;padding:10px;border:1px solid var(--panel-border);border-bottom:none;border-radius:12px 12px 0 0;color:var(--blue-dark);}
+  .palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:16px;border:1px solid var(--panel-border);border-top:none;max-height:260px;overflow-y:auto;background:#fff;}
+  .qnum{aspect-ratio:1;border:none;border-radius:7px;color:#fff;font-weight:700;cursor:pointer;font-size:calc(13px*var(--zoom));position:relative;transition:transform .1s ease, box-shadow .1s ease;}
+  .qnum:hover{transform:scale(1.08);}
+  .qnum.notvisited{background:#aab1c0;}
+  .qnum.notanswered{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .qnum.answered{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .qnum.marked{background:linear-gradient(135deg,#8b3fe8,#6a24c4);}
+  .qnum.markedans{background:linear-gradient(135deg,#8b3fe8,#6a24c4);}
+  .qnum.markedans::after{content:"";position:absolute;bottom:3px;right:3px;width:8px;height:8px;background:#17a668;border-radius:50%;border:1.5px solid #fff;}
+  .qnum.current{outline:3px solid #1a2233;outline-offset:2px;}
+  .qnum.solcorrect{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .qnum.solwrong{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .qnum.solskipped{background:#aab1c0;}
+
+  .analytics{border:1px solid var(--panel-border);border-radius:12px;margin-top:16px;overflow:hidden;box-shadow:0 3px 10px rgba(30,40,80,.05);}
+  .analytics-head{background:linear-gradient(135deg,#2a3245,#1a2233);color:#fff;text-align:center;font-weight:700;padding:9px;font-size:calc(13.5px*var(--zoom));}
+  .analytics table{width:100%;border-collapse:collapse;font-size:calc(13px*var(--zoom));background:#fff;}
+  .analytics td{padding:10px 14px;border-bottom:1px solid #f0f2f7;}
+  .analytics td:last-child{text-align:right;font-weight:700;color:#e08e00;width:40px;}
+  .legend{padding:12px 14px;font-size:calc(12px*var(--zoom));display:flex;flex-direction:column;gap:7px;border:1px solid var(--panel-border);border-top:none;background:#fff;border-radius:0 0 12px 12px;}
+  .legend div{display:flex;align-items:center;gap:8px;}
+  .legend .dot{width:14px;height:14px;border-radius:4px;display:inline-block;}
+
+  .submitbar{text-align:center;padding:18px 0 4px;}
+  .submitbar .btn{padding:11px 28px;font-size:calc(14px*var(--zoom));}
+
+  /* pause overlay */
+  .pauseoverlay{position:fixed;inset:0;background:rgba(15,18,30,.9);backdrop-filter:blur(3px);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:18px;}
+  .pauseoverlay.show{display:flex;}
+  .pauseoverlay h2{font-size:26px;}
+  .pauseoverlay .btn{font-size:15px;padding:11px 30px;}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(15,18,30,.55);display:none;align-items:center;justify-content:center;z-index:1000;}
+  .modal-bg.show{display:flex;}
+  .modal{background:#fff;border-radius:14px;width:430px;max-width:92vw;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal h3{margin-top:0;font-size:20px;}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+  .modal-grid div{background:#f4f6fb;border-radius:9px;padding:12px;text-align:center;}
+  .modal-grid b{display:block;font-size:21px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;}
+  .modal-actions button{padding:9px 18px;border-radius:8px;border:none;font-weight:700;cursor:pointer;transition:.12s;}
+  .modal-actions .cancel{background:#eef0f5;color:#333;}
+  .modal-actions .cancel:hover{background:#e2e5ee;}
+  .modal-actions .confirm{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;}
+  .modal-actions .confirm:hover{filter:brightness(1.06);}
+
+  /* ============ RESULT / ANALYSIS PAGE ============ */
+  .hidden-page{display:none;}
+  .resultwrap{max-width:1020px;margin:28px auto;padding:0 18px;}
+  .score-hero{background:linear-gradient(135deg,#3b6df0,#8b3fe8);border-radius:18px;color:#fff;padding:34px 36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;box-shadow:0 16px 40px rgba(59,109,240,.3);}
+  .score-hero h1{margin:0 0 6px;font-size:30px;}
+  .score-hero p{margin:0;opacity:.92;font-size:15px;}
+  .score-ring{width:126px;height:126px;border-radius:50%;background:#fff;color:var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:30px;box-shadow:0 10px 26px rgba(0,0,0,.22);font-family:'Poppins',sans-serif;}
+  .score-ring span{font-size:12px;font-weight:600;color:#888;font-family:'Inter',sans-serif;}
+  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0;}
+  .statcard{background:#fff;border:1px solid #eceff5;border-radius:14px;padding:18px;text-align:center;box-shadow:0 4px 14px rgba(30,40,80,.06);transition:.15s;}
+  .statcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(30,40,80,.1);}
+  .statcard b{display:block;font-size:26px;margin-bottom:5px;font-family:'Poppins',sans-serif;}
+  .statcard.correct b{color:var(--green);}
+  .statcard.wrong b{color:var(--red);}
+  .statcard.unattempt b{color:var(--grey);}
+  .statcard.accuracy b{color:var(--blue);}
+  .resultactions{display:flex;gap:12px;justify-content:center;margin:28px 0;flex-wrap:wrap;}
+  .resultactions button{padding:12px 24px;border-radius:9px;border:none;font-weight:700;cursor:pointer;font-size:14px;transition:.15s;}
+  .resultactions .primary{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 4px 14px rgba(59,109,240,.3);}
+  .resultactions .primary:hover{transform:translateY(-2px);}
+  .resultactions .secondary{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
+  .resultactions .secondary:hover{background:var(--blue-light);}
+
+  /* ============ SOLUTIONS PAGE (exam-style paginated) ============ */
+  .sol-badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;}
+  .sol-badge.correct{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .sol-badge.wrong{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .sol-badge.skipped{background:#aab1c0;}
+  .soltime{font-size:12px;font-weight:700;color:#6b7280;background:#f1f3f9;padding:4px 11px;border-radius:20px;}
+  .soloption{padding:11px 14px;border-radius:9px;margin:8px 0;border:1.5px solid #eef0f6;font-size:calc(15px*var(--zoom));display:flex;gap:8px;align-items:flex-start;}
+  .soloption.right{background:#e9f9f0;border-color:var(--green);color:#0f6b41;font-weight:700;}
+  .soloption.picked-wrong{background:#fdecea;border-color:var(--red);color:#9c2b1c;font-weight:700;}
+  .soloption .opt-content p{margin:0;}
+  .soloption .opt-content img{max-width:220px;border-radius:6px;margin-top:6px;display:block;}
+  .soloption .tagmini{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:auto;flex-shrink:0;}
+  .soloption.right .tagmini{background:var(--green);color:#fff;}
+  .soloption.picked-wrong .tagmini{background:var(--red);color:#fff;}
+  .explbox{margin-top:14px;background:linear-gradient(180deg,#f2f6ff,#eef2ff);border-left:4px solid var(--blue);padding:13px 16px;font-size:calc(13.5px*var(--zoom));border-radius:0 10px 10px 0;line-height:1.55;}
+  .explbox b{color:var(--blue-dark);}
+
+  @media(max-width:900px){
+    .mainwrap{flex-direction:column;}
+    .palette-wrap{width:100%;margin-left:0;margin-top:14px;}
+    .statgrid{grid-template-columns:repeat(2,1fr);}
+    .score-hero{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ WELCOME PAGE ============ -->
+<div id="welcomePage" class="welcomewrap">
+  <div class="welcomecard">
+    <div class="logo">●</div>
+    <h1>STENO 2026 REASONING 09</h1>
+    <div class="wsub">Reasoning &middot; Full-length practice mock</div>
+    <div class="welcome-stats">
+      <div><b>50</b><span>Questions</span></div>
+      <div><b>50.0</b><span>Max Marks</span></div>
+      <div><b>+1 / -0.25</b><span>Marking</span></div>
+    </div>
+    <div class="timer-set">
+      <label>Set your test duration (minutes)</label>
+      <div class="timer-input-row">
+        <input type="number" id="timerInput" min="15" max="30" value="20">
+        <span class="unit">minutes</span>
+      </div>
+      <div class="hint" id="timerHint">Choose between 15 and 30 minutes</div>
+    </div>
+    <button class="startbtn" onclick="startMock()">Start Mock</button>
+  </div>
+</div>
+
+<!-- ============ TEST PAGE ============ -->
+<div id="testPage" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">●</div>
+      <button class="btn" onclick="zoomChange(1)">Zoom (+)</button>
+      <button class="btn" onclick="zoomChange(-1)">Zoom (−)</button>
+      <button class="btn-outline" onclick="toggleFullscreen()">Exit Full Screen</button>
+    </div>
+    <div class="title-block">STENO 2026 REASONING 09</div>
+    <div class="topbar-right">
+      <div class="timeleft">Time Left: <span id="timeLeft">--:--</span></div>
+      <button class="pausebtn" onclick="togglePause()">⏸ <span id="pauseLabel">Pause Test</span></button>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <div class="subbar">
+    <div><a>SYMBOLS</a><a>INSTRUCTIONS</a></div>
+    <div class="qanswered">Total Questions answered : <span id="totalAnsweredTop">0</span></div>
+  </div>
+
+  <div class="controlrow">
+    <div class="section-tab" id="sectionTab">Reasoning</div>
+    <div class="navbtns">
+      <button class="btn" onclick="goPrev()">Previous</button>
+      <button class="btn" onclick="markForReview()">Mark for Review</button>
+      <button class="btn" onclick="saveAndNext()">Save &amp; Next</button>
+      <button class="btn submitbtn" onclick="confirmSubmit()">Submit Test</button>
+    </div>
+    <div class="collapse-arrow" onclick="togglePalette()" id="collapseArrow">◀</div>
+  </div>
+
+  <div class="mainwrap">
+    <div class="qpanel">
+      <div class="qpanel-head">
+        <h3 id="qNoHeading">Question No 1</h3>
+        <div><span style="font-weight:600;">Choose Language:</span>
+          <select class="lang-select"><option>English</option></select>
+        </div>
+      </div>
+      <div class="qbody">
+        <div class="qtext" id="qText"></div>
+        <div class="options" id="qOptions"></div>
+      </div>
+      <div class="qfooter">
+        <button class="btn-clear" onclick="clearResponse()">Clear Response</button>
+      </div>
+    </div>
+
+    <div class="palette-wrap" id="paletteWrap">
+      <div class="palette-title">Reasoning :</div>
+      <div class="palette-grid" id="paletteGrid"></div>
+
+      <div class="analytics">
+        <div class="analytics-head">Analytics</div>
+        <table>
+          <tr><td>Answered</td><td id="stAnswered">0</td></tr>
+          <tr><td>Not Answered</td><td id="stNotAnswered">0</td></tr>
+          <tr><td>Marked for review</td><td id="stMarked">0</td></tr>
+          <tr><td>Answered &amp; Marked</td><td id="stAnsMarked">0</td></tr>
+          <tr><td>Not Visited</td><td id="stNotVisited">0</td></tr>
+        </table>
+      </div>
+
+      <div class="legend">
+        <div><span class="dot" style="background:#aab1c0"></span> Not Visited</div>
+        <div><span class="dot" style="background:#f0432f"></span> Not Answered</div>
+        <div><span class="dot" style="background:#17a668"></span> Answered</div>
+        <div><span class="dot" style="background:#8b3fe8"></span> Marked for Review</div>
+        <div><span class="dot" style="background:#8b3fe8"></span> Answered &amp; Marked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT PAGE ============ -->
+<div id="resultPage" class="hidden-page">
+  <div class="resultwrap">
+    <div class="score-hero">
+      <div>
+        <h1 id="resTitle">Test Completed 🎉</h1>
+        <p>STENO 2026 REASONING 09</p>
+      </div>
+      <div class="score-ring"><span>SCORE</span><div id="finalScore">0</div></div>
+    </div>
+    <div class="statgrid">
+      <div class="statcard correct"><b id="stCorrect">0</b>Correct</div>
+      <div class="statcard wrong"><b id="stWrong">0</b>Wrong</div>
+      <div class="statcard unattempt"><b id="stUnattempt">0</b>Unattempted</div>
+      <div class="statcard accuracy"><b id="stAccuracy">0%</b>Accuracy</div>
+    </div>
+    <div class="statgrid">
+      <div class="statcard"><b id="stTimeTaken">--</b>Time Taken</div>
+      <div class="statcard"><b id="stMaxMarks">0</b>Max Marks</div>
+      <div class="statcard"><b id="stNegMarks">0</b>Negative Marks</div>
+      <div class="statcard"><b id="stAvgTime">--</b>Avg Time / Q</div>
+    </div>
+    <div class="resultactions">
+      <button class="secondary" onclick="showSolutions()">View Solutions</button>
+      <button class="primary" onclick="restartTest()">Restart Test</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SOLUTIONS PAGE — same exam-style frame as the test ============ -->
+<div id="solutionPage" class="hidden-page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">●</div>
+      <button class="btn" onclick="zoomChange(1)">Zoom (+)</button>
+      <button class="btn" onclick="zoomChange(-1)">Zoom (−)</button>
+    </div>
+    <div class="title-block">STENO 2026 REASONING 09 — Solutions</div>
+    <div class="topbar-right">
+      <button class="btn" onclick="backToResult()">← Back to Analysis</button>
+    </div>
+  </div>
+
+  <div class="controlrow">
+    <div class="section-tab" id="solSectionTab">Reasoning</div>
+    <div class="navbtns">
+      <button class="btn" onclick="solGoPrev()">Previous</button>
+      <button class="btn" onclick="solGoNext()">Next</button>
+    </div>
+    <div class="collapse-arrow" onclick="toggleSolPalette()" id="solCollapseArrow">◀</div>
+  </div>
+
+  <div class="mainwrap">
+    <div class="qpanel">
+      <div class="qpanel-head">
+        <h3 id="solQNoHeading">Question No 1</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="soltime" id="solTimeTaken">0s</span>
+          <div id="solBadgeHolder"></div>
+        </div>
+      </div>
+      <div class="qbody">
+        <div class="qtext" id="solQText"></div>
+        <div id="solOptions"></div>
+        <div class="explbox" id="solExpl"></div>
+      </div>
+    </div>
+
+    <div class="palette-wrap" id="solPaletteWrap">
+      <div class="palette-title">Reasoning :</div>
+      <div class="palette-grid" id="solPaletteGrid"></div>
+
+      <div class="legend">
+        <div><span class="dot" style="background:#17a668"></span> Correct</div>
+        <div><span class="dot" style="background:#f0432f"></span> Wrong</div>
+        <div><span class="dot" style="background:#aab1c0"></span> Skipped</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pauseoverlay" id="pauseOverlay">
+  <h2>Test Paused</h2>
+  <button class="btn" onclick="togglePause()">Resume Test</button>
+</div>
+
+<div class="modal-bg" id="submitModal">
+  <div class="modal">
+    <h3>Submit Test?</h3>
+    <div class="modal-grid">
+      <div><b id="mAnswered">0</b>Answered</div>
+      <div><b id="mNotAnswered">0</b>Not Answered</div>
+      <div><b id="mMarked">0</b>Marked for Review</div>
+      <div><b id="mNotVisited">0</b>Not Visited</div>
+    </div>
+    <p style="font-size:13px;color:#666;">Once submitted, you cannot change your answers.</p>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeSubmitModal()">Cancel</button>
+      <button class="confirm" onclick="doSubmit()">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [{"qno": 1, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a certain code language, ‘LINE’ is coded as ‘160’, ‘BOOK’ is coded as ‘172’. How will ‘CORE’ be coded in that code language?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">162</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">164</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">154</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">156</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 2, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In the following question, sets of letter clusters are given. The letter clusters of each set are related by some logic/rule/relation. Select a group that follows the same logic/rule/relation. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(RQ, NK, JE)</span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(QX, MR, IL)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(NZ, IV, DP)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(MV, JR, CL)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(TX, MT, JN)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(PJ, LD, HX)</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 3, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative that will complete the series. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">D, H, M, Q, V, ?, E, I</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">W</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">C</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Y</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Z</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 4, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a class, Rajiv has scored the 14th position from the top and Vatsala has scored the 32nd position from the last. There are 12 students between Rajiv and Vatsala. What is the maximum possible number of students in the class?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">60</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">58</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">48</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">56</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 5, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative that will complete the series. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">SX, VB, YF, BJ, EN, HR, KV, ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">NA</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">KZ</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">NZ</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QX</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 6, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Which number replaces the question mark in the given figure? </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644670.png\" style=\"height:225px; width:232px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">26</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">29</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">27</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">28</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 7, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Which number replaces the question mark in the given figure? </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644687.png\" style=\"height:243px; width:240px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">1</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">2</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">9</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">8</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 8, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">ART14 : EVX196 :: ? : RUX400 :: LPT17 : PTX289</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">MQT18</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">NQT20</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QTM22</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">NQU20</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 9, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative that will complete the series. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">MOU75, ?, GIO168.75, DFL253.125, ACI379.6875</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">JRL111.5</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">LRJ111.05</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">JLR112.5</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">RJL112.05</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 10, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the set in which the numbers are related in the same way as the numbers of the following sets. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(16, 7, 37)</span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">28, 9, 55)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(19, 6, 36)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(23, 8, 48)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(13, 4, 25)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(20, 7, 45)</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 11, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the set in which the numbers are related in the same way as the numbers of the following sets. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(18, 9, 36)</span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(36, 18, 72)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(46, 33, 132)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(24, 12, 36)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(58, 29, 118)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(32, 16, 64)</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 12, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative that will complete the series. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">FLC103, ?, HJE519, IIF727, JHG935</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">DJK312</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">DGK309</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">KJD310</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">GKD311</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 13, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Height of 6 persons J, K, L, M, N and O is compared. Height of K is more than only 3 persons. No two persons have the same height. Height of J is more than M, N and O. Height of J is not maximum. Whose height is maximum?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">K</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">L</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">M</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">N</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 14, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">February 1 of a leap year is Sunday. How many total Fridays and Saturdays are there in March of that year?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">7</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">8</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">9</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">10</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 15, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">5 boys A, B, C, D and E are sitting in a row facing north (not necessarily in the same order). D is to the immediate left of C. A is third to the left of B. B is the immediate neighbour of E and C. Who are sitting at the ends of the row?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A and C</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A and E</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">D and E</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">C and E</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 16, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the question mark (?) from the given alternatives. </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644711.png\" style=\"height:52px; width:282px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644714.png\" style=\"height:72px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644716.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644718.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644720.png\" style=\"height:70px; width:70px\" /></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 17, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the question mark (?) from the given alternatives.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644725.png\" style=\"height:54px; width:285px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644729.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644732.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644735.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644737.png\" style=\"height:81px; width:80px\" /></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 18, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Two figures given on the left side of (::) are related by some logic/rule/relation. Select the missing figure on the right side from the given alternatives based on the same logic/rule/relation. </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644742.png\" style=\"height:54px; width:282px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644745.png\" style=\"height:81px; width:80px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644747.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644750.png\" style=\"height:78px; width:80px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644751.png\" style=\"height:80px; width:80px\" /></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 19, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Two figures given on the left side of (::) are related by some logic/rule/relation. Select the missing figure on the right side from the given alternatives based on the same logic/rule/relation. </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644757.png\" style=\"height:55px; width:275px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644760.png\" style=\"height:92px; width:90px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644763.png\" style=\"height:89px; width:90px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644766.png\" style=\"height:92px; width:90px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644768.png\" style=\"height:91px; width:90px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 20, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Identify the number of rectangles in the given figure. </span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644771.png\" style=\"height:164px; width:190px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">9</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">7</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">8</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">10</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 21, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">How many squares are there in the given figure?</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/UdLTQ1786620644775.png\" style=\"height:165px; width:230px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">53</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">28</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">27</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">54</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 22, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">If in a certain code language, ROSE is coded as UTQA and NOCK is coded as QTAG, then how will WAIT be coded in that language?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">XHHN</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">YGEQ</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">BDFN</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">ZFGP</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 23, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the option that is related to the fifth letter-cluster in the same way as the second letter-cluster is related to the first letter-cluster and the fourth letter-cluster is related to the third letter-cluster.</span><br><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">JH :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">HC :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">? :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">RS :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">LZ :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> JU</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">VX</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">TY</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">TX</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">WY</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 24, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the set in which the letter-clusters are related in the same way as the letter-clusters of the following sets: </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(WI, TB, QU)</span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(CT, ZM, WF)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(EP, BI, YB)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(IF, EC, XV)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(HM, DJ, WC)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(IP, CM, BF)</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 25, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Which letter will replace the question mark (?) in the following series? </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">E, D, A, V, O, F, U</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">E</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">H</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">I</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">J</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 26, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Find the number that will replace the question mark (?) in the given figure.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698668990.png\" style=\"height:137px; width:140px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">156</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">158</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">157</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">180</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 27, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Find the number that will replace the question mark (?) in the given figure.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669011.png\" style=\"height:82px; width:288px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">262</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">324</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">216</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">224</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 28, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Which letter-cluster will replace the question mark (?) in the following series? </span><br />\r\n<span style=\"font-family:'Arial'; font-size:11pt\">LO</span><span style=\"font-family:'Arial'; font-size:11pt\">, ?</span><span style=\"font-family:'Arial'; font-size:11pt\">, TY, XD, BI, FN, JS, NX</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">QV</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">NT</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">PS</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">PT</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 29, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the set in which the numbers are related in the same way as the numbers of the following sets: </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">(11, 343, 18), (15, 729, 24)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(15, 512, 13)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(14, 341, 13)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(12, 216, 18)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(162, 543, 143)</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 30, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a row of 21 girls, when Rita was shifted five places to the right, she became 12th from the left end.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">What was her earlier position from the right end?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">15</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">17</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">18</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">19</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 31, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the set in which the numbers are related in the same way as the numbers of the following sets: </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">(4, 6, 9), (25, 10, 4)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(6, 36, 216)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(23, 3, 32)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(98, 7, 89)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(45, 20, 19)</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 32, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Select the option that is exactly similar to the given address: </span><br />\r\n<span style=\"font-family:'Arial'; font-size:11pt\">Shruti Bansal, D-235, Akanksha Building, Nehru Vihar, Delhi-110054</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Shruti Bansal, D-235, Akansha Building, Nehru Vihar, Delhi-110054</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Shruti Bansal, D-235, Akanksha Building, Nehru Vihar, Delhi-110054</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Shruti Bansal, D-253, Akanksha Building, Nehru Vihar, Delhi-110054</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Shruti Bansal, D-235, Akanksha Building, Nehru Vihar, Delhi-110045</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 33, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Arrange the following words in the order in which they appear in an English dictionary: </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">1. Function </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">2. Fun </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">3. Fund </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4. Fundamental </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">5. Funeral</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">21345</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">54321</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">54231</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">12345</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 34, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">KLP</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">40 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> NOS</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">240 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: AWV</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">60 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> DZY</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">260 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: BDJ</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">90 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">GIE290</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">MGI290</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">GMF290</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">EGM290</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 35, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Find the wrong term in the following series: </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">CAT1500, FFL1286, IRE1072, LPV858, OUN644, RZF430</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">RZF</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">OUN</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">IRE</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">CAT</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 36, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">726 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">2910 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">283 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">1138 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">? :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> 3458</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">854</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">863</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">856</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">862</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 37, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Find the wrong number in the following series: </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">-827, -824, -819, -814, -809, -804, -799, -794</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-799</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-794</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-827</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-814</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 38, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Which number will replace the question mark (?) in the following series? </span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">15, 42, 123, 366, 1095, 3282</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, ?</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, 29526</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">9844</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">9847</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">9843</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">9839</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 39, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">What is the sum of the number of days in December, February, March and October in the year 1900?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">121</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">122</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">123</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">120</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 40, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Five persons P, Q, R, S and T are sitting in a row facing north. Q and </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">R are</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> immediate neighbours. S and </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">R are</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> immediate neighbours. Only P sits to the left of Q. Who sits at the right end?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">T</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">P</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Q</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">S</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 41, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">The price of pen A is more than B but less than D. The price of C is more than D. The price of E is less than B but not less than F. How many pens cost more than F but less than D?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">3</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">2</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">1</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 42, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the sign of question mark (?) from the given alternatives.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669085.png\" style=\"height:53px; width:290px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669092.png\" style=\"height:70px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669095.png\" style=\"height:70px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669099.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669103.png\" style=\"height:71px; width:70px\" /></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 43, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the sign of question mark (?) from the given alternatives.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669117.png\" style=\"height:56px; width:292px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669125.png\" style=\"height:82px; width:80px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669131.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669137.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669143.png\" style=\"height:81px; width:80px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 44, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Two figures given on the left side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> are related with some logic/rule/relation. Select the missing figure on the right side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> from the given alternatives based on the same logic/rule/relation.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669153.png\" style=\"height:52px; width:277px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669160.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669164.png\" style=\"height:79px; width:80px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669168.png\" style=\"height:80px; width:80px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669172.png\" style=\"height:81px; width:80px\" /></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 45, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">How many triangles are there in the given figure?</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669177.png\" style=\"height:146px; width:179px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">12</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">11</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">14</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">10</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 46, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Select the alternative figure that will come in place of the question mark (?) in the following figure series.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669188.png\" style=\"height:79px; width:262px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669194.png\" style=\"height:64px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669198.png\" style=\"height:65px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669201.png\" style=\"height:66px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Aaf221786698669204.png\" style=\"height:64px; width:70px\" /></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 47, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative that will complete the series. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">347, ?, 353, 356, 359, 362, 365, 368</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">350</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">352</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">353</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">347</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 48, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Identify the similar address: </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Flat No. 12B, Building 7, Sector 15, Sohna Road, Gurgaon, Haryana - 122001</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Flat 12B, Bldg. 7, Sec-15, Sohna Rd., Gurugram, Haryana 122001</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Flat No. 12B, Building 7, Sector 15, Sohna Road, Gurugram, Haryana - 122001</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Flat No. 12B, Building 7, Sector 15, Sohna Road, Gurgaon, Haryana - 122021</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Flat No. 12B, Building 7, Sector 15, Sohna Road, Gurgaon, Haryana – 122001</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 49, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Arrange the given words in the sequence in which they occur in the dictionary. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">1. Incorrect </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">2. Incorporate </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">3. Incoordination </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4. Incorrupt </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">5. Incorruption</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">32415</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">23145</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">32145</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">21345</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 50, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the option that is related to the second letter cluster in the same way as the third letter cluster is related to the fourth letter cluster and fifth letter cluster is related to sixth letter cluster. </span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">? : WS :: XY : DB :: UE : AV</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">PH</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QH</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QI</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">SK</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}];
+const POS_MARK = 1;
+const NEG_MARK = 0.25;
+const MIN_MIN = 15;
+const MAX_MIN = 30;
+
+let DURATION_SEC = 20 * 60;
+let current = 0;
+let solIndex = 0;
+let zoomLevel = 1;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let paused = false;
+
+const state = QUESTIONS.map(() => ({status:'notvisited', selected:null}));
+const qTimeSpent = QUESTIONS.map(() => 0);
+
+function $(id){ return document.getElementById(id); }
+
+/* ================= WELCOME / START ================= */
+function startMock(){
+  let val = parseInt($('timerInput').value, 10);
+  if(isNaN(val)){ val = 20; }
+  if(val < MIN_MIN || val > MAX_MIN){
+    val = Math.max(MIN_MIN, Math.min(MAX_MIN, val));
+    $('timerInput').value = val;
+    $('timerHint').textContent = 'Adjusted to allowed range (15–30 minutes)';
+    $('timerHint').classList.add('err');
+  }
+  DURATION_SEC = val * 60;
+  timeLeft = DURATION_SEC;
+  $('welcomePage').style.display = 'none';
+  $('testPage').style.display = 'block';
+  renderQuestion();
+  startTimer();
+}
+
+/* ================= TEST PAGE LOGIC ================= */
+function renderOptionHtml(o){
+  let imgHtml = o.image ? `<img src="${o.image}" alt="option ${o.label}">` : '';
+  return `<div class="opt-content">${o.html || ''}${imgHtml}</div>`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  if(state[current].status === 'notvisited') state[current].status = 'notanswered';
+  $('qNoHeading').textContent = 'Question No ' + q.qno;
+  $('sectionTab').textContent = q.section || '';
+  let qHtml = q.qhtml || '';
+  if(q.qimage){ qHtml += `<div class="qimg-wrap"><img src="${q.qimage}" alt="question figure"></div>`; }
+  $('qText').innerHTML = qHtml;
+  const optsHtml = q.options.map(o => {
+    const checked = state[current].selected === o.label ? 'checked' : '';
+    return `<label><input type="radio" name="opt" value="${o.label}" ${checked} onclick="selectOption('${o.label}')"> <b>${o.label})</b> ${renderOptionHtml(o)}</label>`;
+  }).join('');
+  $('qOptions').innerHTML = optsHtml;
+  renderPalette();
+  updateTopAnsweredCount();
+}
+
+function selectOption(label){ state[current].selected = label; }
+
+function saveAndNext(){
+  if(state[current].selected !== null){
+    state[current].status = (state[current].status === 'marked' || state[current].status === 'markedans') ? 'markedans' : 'answered';
+  } else if(state[current].status === 'marked' || state[current].status === 'markedans'){
+    state[current].status = 'marked';
+  } else {
+    state[current].status = 'notanswered';
+  }
+  goTo(Math.min(current+1, QUESTIONS.length-1));
+}
+
+function markForReview(){
+  state[current].status = state[current].selected !== null ? 'markedans' : 'marked';
+  goTo(Math.min(current+1, QUESTIONS.length-1));
+}
+
+function clearResponse(){
+  state[current].selected = null;
+  state[current].status = (state[current].status === 'marked' || state[current].status === 'markedans') ? 'marked' : 'notanswered';
+  renderQuestion();
+}
+
+function goPrev(){ goTo(Math.max(current-1,0)); }
+function goTo(idx){ current = idx; renderQuestion(); }
+
+function renderPalette(){
+  let html = '';
+  let counts = {notvisited:0, notanswered:0, answered:0, marked:0, markedans:0};
+  QUESTIONS.forEach((q,i) => {
+    const st = state[i].status;
+    counts[st] = (counts[st]||0) + 1;
+    const curCls = i === current ? 'current' : '';
+    html += `<button class="qnum ${st} ${curCls}" onclick="goTo(${i})">${q.qno}</button>`;
+  });
+  $('paletteGrid').innerHTML = html;
+  $('stAnswered').textContent = counts.answered;
+  $('stNotAnswered').textContent = counts.notanswered;
+  $('stMarked').textContent = counts.marked;
+  $('stAnsMarked').textContent = counts.markedans;
+  $('stNotVisited').textContent = counts.notvisited;
+}
+
+function updateTopAnsweredCount(){
+  const answered = state.filter(s => s.status==='answered' || s.status==='markedans').length;
+  $('totalAnsweredTop').textContent = answered;
+}
+
+function togglePalette(){
+  const p = $('paletteWrap');
+  p.classList.toggle('hidden');
+  $('collapseArrow').textContent = p.classList.contains('hidden') ? '▶' : '◀';
+}
+
+function zoomChange(dir){
+  zoomLevel = Math.min(1.6, Math.max(0.75, zoomLevel + dir*0.1));
+  document.documentElement.style.setProperty('--zoom', zoomLevel);
+}
+
+function toggleFullscreen(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
+  else { document.exitFullscreen().catch(()=>{}); }
+}
+
+function togglePause(){
+  paused = !paused;
+  $('pauseOverlay').classList.toggle('show', paused);
+  $('pauseLabel').textContent = paused ? 'Resume' : 'Pause Test';
+}
+
+function startTimer(){
+  timerHandle = setInterval(() => {
+    if(paused) return;
+    timeLeft--;
+    qTimeSpent[current] = (qTimeSpent[current]||0) + 1;
+    if(timeLeft <= 0){ timeLeft = 0; clearInterval(timerHandle); doSubmit(); }
+    renderTime();
+  }, 1000);
+  renderTime();
+}
+
+function renderTime(){
+  const m = Math.floor(timeLeft/60), s = timeLeft % 60;
+  $('timeLeft').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function confirmSubmit(){
+  renderPalette();
+  const counts = {notvisited:0, notanswered:0, answered:0, marked:0, markedans:0};
+  state.forEach(s => counts[s.status] = (counts[s.status]||0)+1);
+  $('mAnswered').textContent = counts.answered + counts.markedans;
+  $('mNotAnswered').textContent = counts.notanswered;
+  $('mMarked').textContent = counts.marked + counts.markedans;
+  $('mNotVisited').textContent = counts.notvisited;
+  $('submitModal').classList.add('show');
+}
+function closeSubmitModal(){ $('submitModal').classList.remove('show'); }
+
+function doSubmit(){
+  closeSubmitModal();
+  clearInterval(timerHandle);
+  const timeTakenSec = DURATION_SEC - timeLeft;
+  let correct=0, wrong=0, unattempt=0, marks=0, negMarksTotal=0;
+  QUESTIONS.forEach((q,i) => {
+    const sel = state[i].selected;
+    if(sel === null || sel === undefined){ unattempt++; }
+    else if(sel === q.correct){ correct++; marks += (q.marks !== undefined ? q.marks : POS_MARK); }
+    else { wrong++; negMarksTotal += NEG_MARK; marks -= NEG_MARK; }
+  });
+  const maxMarks = QUESTIONS.reduce((a,q) => a + (q.marks !== undefined ? q.marks : POS_MARK), 0);
+  const attempted = correct + wrong;
+  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : '0.0';
+
+  $('finalScore').textContent = marks.toFixed(2);
+  $('stCorrect').textContent = correct;
+  $('stWrong').textContent = wrong;
+  $('stUnattempt').textContent = unattempt;
+  $('stAccuracy').textContent = accuracy + '%';
+  $('stMaxMarks').textContent = maxMarks;
+  $('stNegMarks').textContent = negMarksTotal.toFixed(2);
+  $('stTimeTaken').textContent = fmtTime(timeTakenSec);
+  $('stAvgTime').textContent = fmtTime(Math.round(timeTakenSec / QUESTIONS.length));
+
+  $('testPage').style.display = 'none';
+  $('resultPage').classList.remove('hidden-page');
+}
+
+function fmtTime(sec){ const m = Math.floor(sec/60), s = sec%60; return m + 'm ' + s + 's'; }
+
+/* ================= SOLUTIONS PAGE (exam-style, one Q at a time) ================= */
+function solStatus(i){
+  const sel = state[i].selected;
+  const q = QUESTIONS[i];
+  if(sel === null || sel === undefined) return 'skipped';
+  return sel === q.correct ? 'correct' : 'wrong';
+}
+
+function renderSolPalette(){
+  let html = '';
+  QUESTIONS.forEach((q,i) => {
+    const st = solStatus(i);
+    const cls = st === 'correct' ? 'solcorrect' : st === 'wrong' ? 'solwrong' : 'solskipped';
+    const curCls = i === solIndex ? 'current' : '';
+    html += `<button class="qnum ${cls} ${curCls}" onclick="solGoTo(${i})">${q.qno}</button>`;
+  });
+  $('solPaletteGrid').innerHTML = html;
+}
+
+function renderSolQuestion(){
+  const q = QUESTIONS[solIndex];
+  const sel = state[solIndex].selected;
+  const st = solStatus(solIndex);
+  $('solQNoHeading').textContent = 'Question No ' + q.qno;
+  $('solSectionTab').textContent = q.section || '';
+  $('solTimeTaken').textContent = 'Time taken: ' + fmtTime(qTimeSpent[solIndex] || 0);
+  let qHtml = q.qhtml || '';
+  if(q.qimage){ qHtml += `<div class="qimg-wrap"><img src="${q.qimage}" alt="question figure"></div>`; }
+  $('solQText').innerHTML = qHtml;
+  const badge = st === 'correct' ? '<span class="sol-badge correct">Correct</span>'
+              : st === 'wrong' ? '<span class="sol-badge wrong">Wrong</span>'
+              : '<span class="sol-badge skipped">Skipped</span>';
+  $('solBadgeHolder').innerHTML = badge;
+
+  let optsHtml = q.options.map(o => {
+    let cls = '', tag = '';
+    if(o.label === q.correct){ cls='right'; tag='<span class="tagmini">CORRECT</span>'; }
+    else if(o.label === sel && sel !== q.correct){ cls='picked-wrong'; tag='<span class="tagmini">YOUR ANSWER</span>'; }
+    return `<div class="soloption ${cls}"><b>${o.label})</b> ${renderOptionHtml(o)} ${tag}</div>`;
+  }).join('');
+  $('solOptions').innerHTML = optsHtml;
+  $('solExpl').innerHTML = q.explanation ? `<b>Explanation:</b> ${q.explanation}` : '<b>Explanation:</b> Not available.';
+  renderSolPalette();
+}
+
+function solGoTo(i){ solIndex = i; renderSolQuestion(); }
+function solGoNext(){ solGoTo(Math.min(solIndex+1, QUESTIONS.length-1)); }
+function solGoPrev(){ solGoTo(Math.max(solIndex-1, 0)); }
+
+function toggleSolPalette(){
+  const p = $('solPaletteWrap');
+  p.classList.toggle('hidden');
+  $('solCollapseArrow').textContent = p.classList.contains('hidden') ? '▶' : '◀';
+}
+
+function showSolutions(){
+  $('resultPage').classList.add('hidden-page');
+  $('solutionPage').classList.remove('hidden-page');
+  solIndex = 0;
+  renderSolQuestion();
+}
+function backToResult(){
+  $('solutionPage').classList.add('hidden-page');
+  $('resultPage').classList.remove('hidden-page');
+}
+function restartTest(){ location.reload(); }
+</script>
+</body>
+</html>

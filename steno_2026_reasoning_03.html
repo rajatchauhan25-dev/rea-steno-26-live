@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>STENO 2026 REASONING 03</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --zoom: 1;
+    --blue:#3b6df0;
+    --blue-dark:#2952c8;
+    --blue-light:#eaf0ff;
+    --green:#17a668;
+    --green-dark:#0f8a56;
+    --purple:#8b3fe8;
+    --red:#f0432f;
+    --grey:#9aa2b1;
+    --ink:#1a2233;
+    --panel-border:#e2e6ee;
+    --bg:#f4f6fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;font-family:'Inter',Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:calc(14px * var(--zoom));}
+  h1,h2,h3{font-family:'Poppins',Arial,sans-serif;}
+  a{cursor:pointer;}
+  img{max-width:100%;height:auto;}
+
+  /* ============ WELCOME PAGE ============ */
+  .welcomewrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .welcomecard{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:40px 36px;text-align:center;box-shadow:0 20px 60px rgba(30,40,80,.14);}
+  .welcomecard .logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#3b6df0,#8b3fe8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;margin:0 auto 18px;box-shadow:0 6px 18px rgba(59,109,240,.35);}
+  .welcomecard h1{font-size:23px;margin:0 0 8px;letter-spacing:.2px;}
+  .welcomecard .wsub{color:#6b7280;font-size:14px;margin-bottom:26px;}
+  .welcome-stats{display:flex;justify-content:center;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+  .welcome-stats div{background:#f4f6fb;border-radius:12px;padding:12px 18px;min-width:100px;}
+  .welcome-stats b{display:block;font-size:19px;font-family:'Poppins',sans-serif;color:var(--blue-dark);}
+  .welcome-stats span{font-size:11.5px;color:#7a8194;}
+  .timer-set{margin-bottom:28px;}
+  .timer-set label{display:block;font-weight:700;font-size:14px;margin-bottom:10px;color:var(--ink);}
+  .timer-set .timer-input-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+  .timer-set input[type=number]{width:90px;padding:10px 12px;font-size:18px;font-weight:700;text-align:center;border:2px solid var(--panel-border);border-radius:10px;font-family:inherit;color:var(--blue-dark);}
+  .timer-set input[type=number]:focus{outline:none;border-color:var(--blue);}
+  .timer-set .unit{font-weight:600;color:#555;}
+  .timer-set .hint{font-size:11.5px;color:#9aa2b1;margin-top:8px;}
+  .timer-set .hint.err{color:var(--red);font-weight:600;}
+  .startbtn{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;border:none;padding:14px 40px;border-radius:11px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(23,166,104,.35);transition:.15s;}
+  .startbtn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(23,166,104,.45);}
+
+  /* ============ HEADER ============ */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#fff;border-bottom:1px solid #eceff5;flex-wrap:wrap;gap:8px;box-shadow:0 1px 3px rgba(20,30,60,.04);}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b6df0,#8b3fe8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;box-shadow:0 3px 8px rgba(59,109,240,.35);}
+  .btn{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:8px 15px;border-radius:7px;font-weight:600;font-size:calc(13px*var(--zoom));cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;box-shadow:0 2px 6px rgba(59,109,240,.28);}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(59,109,240,.38);}
+  .btn:active{transform:translateY(0);}
+  .btn.submitbtn{background:linear-gradient(135deg,#17a668,#0f8a56);box-shadow:0 2px 6px rgba(23,166,104,.35);}
+  .btn.submitbtn:hover{box-shadow:0 5px 14px rgba(23,166,104,.45);}
+  .btn-outline{background:#fff;color:var(--blue);border:1.5px solid var(--blue);padding:5px 11px;border-radius:7px;font-size:calc(12px*var(--zoom));font-weight:600;cursor:pointer;transition:.12s;}
+  .btn-outline:hover{background:var(--blue-light);}
+  .title-block{text-align:center;font-weight:700;font-size:calc(19px*var(--zoom));line-height:1.25;flex:1;min-width:260px;letter-spacing:.2px;}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .timeleft{font-weight:700;font-size:calc(15px*var(--zoom));background:#fff3f0;padding:6px 12px;border-radius:8px;border:1px solid #ffd9d1;}
+  .timeleft span{color:var(--red);}
+  .pausebtn{display:flex;align-items:center;gap:5px;font-weight:600;color:var(--ink);background:#eef1f7;border:none;cursor:pointer;font-size:calc(13px*var(--zoom));padding:7px 12px;border-radius:8px;transition:.12s;}
+  .pausebtn:hover{background:#e3e7f1;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#555,#222);}
+
+  /* ============ SUBBAR ============ */
+  .subbar{display:flex;justify-content:space-between;align-items:center;padding:8px 18px;flex-wrap:wrap;gap:6px;background:#fff;border-bottom:1px solid #eceff5;}
+  .subbar a{color:var(--red);font-weight:700;text-decoration:none;margin-right:16px;font-size:calc(12.5px*var(--zoom));border-bottom:2px solid transparent;transition:.12s;}
+  .subbar a:hover{border-bottom-color:var(--red);}
+  .qanswered{font-weight:700;font-size:calc(13px*var(--zoom));}
+  .qanswered span{color:#e08e00;background:#fff6e5;padding:2px 9px;border-radius:6px;}
+
+  /* ============ CONTROL ROW ============ */
+  .controlrow{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;flex-wrap:wrap;gap:8px;}
+  .section-tab{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;font-size:calc(14px*var(--zoom));box-shadow:0 3px 8px rgba(23,166,104,.3);}
+  .navbtns{display:flex;gap:9px;flex-wrap:wrap;}
+  .navbtns .btn{padding:10px 17px;}
+  .collapse-arrow{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;user-select:none;background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:50%;box-shadow:0 3px 8px rgba(59,109,240,.3);transition:.15s;}
+  .collapse-arrow:hover{transform:scale(1.08);}
+
+  /* ============ MAIN LAYOUT ============ */
+  .mainwrap{display:flex;gap:0;padding:6px 18px 18px;align-items:flex-start;}
+  .qpanel{flex:1;border:1px solid var(--panel-border);border-radius:12px;min-height:520px;background:#fff;box-shadow:0 4px 18px rgba(30,40,80,.06);overflow:hidden;}
+  .qpanel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #f0f2f7;flex-wrap:wrap;gap:8px;background:linear-gradient(180deg,#fbfcff,#fff);}
+  .qpanel-head h3{margin:0;font-size:calc(17px*var(--zoom));color:var(--blue-dark);}
+  .lang-select{padding:5px 9px;border:1px solid #d8dded;border-radius:6px;font-family:inherit;}
+  .qbody{padding:22px 24px;font-size:calc(15.5px*var(--zoom));line-height:1.6;}
+  .qtext{margin-bottom:16px;font-weight:500;}
+  .qtext p{margin:0 0 8px;}
+  .qimg-wrap{margin:14px 0 20px;text-align:left;}
+  .qimg-wrap img{max-width:420px;border:1px solid var(--panel-border);border-radius:8px;}
+  .options label{display:flex;align-items:flex-start;gap:10px;margin:10px 0;padding:11px 14px;border-radius:9px;cursor:pointer;font-size:calc(15px*var(--zoom));border:1.5px solid #eef0f6;transition:.12s;}
+  .options label:hover{background:var(--blue-light);border-color:#cdddff;}
+  .options input{margin-top:3px;transform:scale(1.2);accent-color:var(--blue);flex-shrink:0;}
+  .options .opt-content p{margin:0;}
+  .options .opt-content img{max-width:220px;border:1px solid var(--panel-border);border-radius:6px;margin-top:6px;display:block;}
+  .qfooter{display:flex;gap:10px;padding:16px 24px;border-top:1px solid #f0f2f7;flex-wrap:wrap;}
+  .btn-clear{background:#fff;color:#555;border:1.5px solid #d8dded;padding:9px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:.12s;}
+  .btn-clear:hover{background:#f5f6fa;}
+
+  .palette-wrap{width:330px;flex-shrink:0;margin-left:16px;transition:all .2s ease;}
+  .palette-wrap.hidden{width:0;margin-left:0;overflow:hidden;opacity:0;}
+  .palette-title{background:linear-gradient(135deg,#eef1fb,#e6ecff);font-weight:700;text-align:center;padding:10px;border:1px solid var(--panel-border);border-bottom:none;border-radius:12px 12px 0 0;color:var(--blue-dark);}
+  .palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:16px;border:1px solid var(--panel-border);border-top:none;max-height:260px;overflow-y:auto;background:#fff;}
+  .qnum{aspect-ratio:1;border:none;border-radius:7px;color:#fff;font-weight:700;cursor:pointer;font-size:calc(13px*var(--zoom));position:relative;transition:transform .1s ease, box-shadow .1s ease;}
+  .qnum:hover{transform:scale(1.08);}
+  .qnum.notvisited{background:#aab1c0;}
+  .qnum.notanswered{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .qnum.answered{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .qnum.marked{background:linear-gradient(135deg,#8b3fe8,#6a24c4);}
+  .qnum.markedans{background:linear-gradient(135deg,#8b3fe8,#6a24c4);}
+  .qnum.markedans::after{content:"";position:absolute;bottom:3px;right:3px;width:8px;height:8px;background:#17a668;border-radius:50%;border:1.5px solid #fff;}
+  .qnum.current{outline:3px solid #1a2233;outline-offset:2px;}
+  .qnum.solcorrect{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .qnum.solwrong{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .qnum.solskipped{background:#aab1c0;}
+
+  .analytics{border:1px solid var(--panel-border);border-radius:12px;margin-top:16px;overflow:hidden;box-shadow:0 3px 10px rgba(30,40,80,.05);}
+  .analytics-head{background:linear-gradient(135deg,#2a3245,#1a2233);color:#fff;text-align:center;font-weight:700;padding:9px;font-size:calc(13.5px*var(--zoom));}
+  .analytics table{width:100%;border-collapse:collapse;font-size:calc(13px*var(--zoom));background:#fff;}
+  .analytics td{padding:10px 14px;border-bottom:1px solid #f0f2f7;}
+  .analytics td:last-child{text-align:right;font-weight:700;color:#e08e00;width:40px;}
+  .legend{padding:12px 14px;font-size:calc(12px*var(--zoom));display:flex;flex-direction:column;gap:7px;border:1px solid var(--panel-border);border-top:none;background:#fff;border-radius:0 0 12px 12px;}
+  .legend div{display:flex;align-items:center;gap:8px;}
+  .legend .dot{width:14px;height:14px;border-radius:4px;display:inline-block;}
+
+  .submitbar{text-align:center;padding:18px 0 4px;}
+  .submitbar .btn{padding:11px 28px;font-size:calc(14px*var(--zoom));}
+
+  /* pause overlay */
+  .pauseoverlay{position:fixed;inset:0;background:rgba(15,18,30,.9);backdrop-filter:blur(3px);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:18px;}
+  .pauseoverlay.show{display:flex;}
+  .pauseoverlay h2{font-size:26px;}
+  .pauseoverlay .btn{font-size:15px;padding:11px 30px;}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(15,18,30,.55);display:none;align-items:center;justify-content:center;z-index:1000;}
+  .modal-bg.show{display:flex;}
+  .modal{background:#fff;border-radius:14px;width:430px;max-width:92vw;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal h3{margin-top:0;font-size:20px;}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+  .modal-grid div{background:#f4f6fb;border-radius:9px;padding:12px;text-align:center;}
+  .modal-grid b{display:block;font-size:21px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;}
+  .modal-actions button{padding:9px 18px;border-radius:8px;border:none;font-weight:700;cursor:pointer;transition:.12s;}
+  .modal-actions .cancel{background:#eef0f5;color:#333;}
+  .modal-actions .cancel:hover{background:#e2e5ee;}
+  .modal-actions .confirm{background:linear-gradient(135deg,#17a668,#0f8a56);color:#fff;}
+  .modal-actions .confirm:hover{filter:brightness(1.06);}
+
+  /* ============ RESULT / ANALYSIS PAGE ============ */
+  .hidden-page{display:none;}
+  .resultwrap{max-width:1020px;margin:28px auto;padding:0 18px;}
+  .score-hero{background:linear-gradient(135deg,#3b6df0,#8b3fe8);border-radius:18px;color:#fff;padding:34px 36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;box-shadow:0 16px 40px rgba(59,109,240,.3);}
+  .score-hero h1{margin:0 0 6px;font-size:30px;}
+  .score-hero p{margin:0;opacity:.92;font-size:15px;}
+  .score-ring{width:126px;height:126px;border-radius:50%;background:#fff;color:var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:30px;box-shadow:0 10px 26px rgba(0,0,0,.22);font-family:'Poppins',sans-serif;}
+  .score-ring span{font-size:12px;font-weight:600;color:#888;font-family:'Inter',sans-serif;}
+  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0;}
+  .statcard{background:#fff;border:1px solid #eceff5;border-radius:14px;padding:18px;text-align:center;box-shadow:0 4px 14px rgba(30,40,80,.06);transition:.15s;}
+  .statcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(30,40,80,.1);}
+  .statcard b{display:block;font-size:26px;margin-bottom:5px;font-family:'Poppins',sans-serif;}
+  .statcard.correct b{color:var(--green);}
+  .statcard.wrong b{color:var(--red);}
+  .statcard.unattempt b{color:var(--grey);}
+  .statcard.accuracy b{color:var(--blue);}
+  .resultactions{display:flex;gap:12px;justify-content:center;margin:28px 0;flex-wrap:wrap;}
+  .resultactions button{padding:12px 24px;border-radius:9px;border:none;font-weight:700;cursor:pointer;font-size:14px;transition:.15s;}
+  .resultactions .primary{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 4px 14px rgba(59,109,240,.3);}
+  .resultactions .primary:hover{transform:translateY(-2px);}
+  .resultactions .secondary{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
+  .resultactions .secondary:hover{background:var(--blue-light);}
+
+  /* ============ SOLUTIONS PAGE (exam-style paginated) ============ */
+  .sol-badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;}
+  .sol-badge.correct{background:linear-gradient(135deg,#17a668,#0f8a56);}
+  .sol-badge.wrong{background:linear-gradient(135deg,#f0432f,#c92c1a);}
+  .sol-badge.skipped{background:#aab1c0;}
+  .soltime{font-size:12px;font-weight:700;color:#6b7280;background:#f1f3f9;padding:4px 11px;border-radius:20px;}
+  .soloption{padding:11px 14px;border-radius:9px;margin:8px 0;border:1.5px solid #eef0f6;font-size:calc(15px*var(--zoom));display:flex;gap:8px;align-items:flex-start;}
+  .soloption.right{background:#e9f9f0;border-color:var(--green);color:#0f6b41;font-weight:700;}
+  .soloption.picked-wrong{background:#fdecea;border-color:var(--red);color:#9c2b1c;font-weight:700;}
+  .soloption .opt-content p{margin:0;}
+  .soloption .opt-content img{max-width:220px;border-radius:6px;margin-top:6px;display:block;}
+  .soloption .tagmini{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:auto;flex-shrink:0;}
+  .soloption.right .tagmini{background:var(--green);color:#fff;}
+  .soloption.picked-wrong .tagmini{background:var(--red);color:#fff;}
+  .explbox{margin-top:14px;background:linear-gradient(180deg,#f2f6ff,#eef2ff);border-left:4px solid var(--blue);padding:13px 16px;font-size:calc(13.5px*var(--zoom));border-radius:0 10px 10px 0;line-height:1.55;}
+  .explbox b{color:var(--blue-dark);}
+
+  @media(max-width:900px){
+    .mainwrap{flex-direction:column;}
+    .palette-wrap{width:100%;margin-left:0;margin-top:14px;}
+    .statgrid{grid-template-columns:repeat(2,1fr);}
+    .score-hero{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ WELCOME PAGE ============ -->
+<div id="welcomePage" class="welcomewrap">
+  <div class="welcomecard">
+    <div class="logo">●</div>
+    <h1>STENO 2026 REASONING 03</h1>
+    <div class="wsub">Reasoning &middot; Full-length practice mock</div>
+    <div class="welcome-stats">
+      <div><b>50</b><span>Questions</span></div>
+      <div><b>50.0</b><span>Max Marks</span></div>
+      <div><b>+1 / -0.25</b><span>Marking</span></div>
+    </div>
+    <div class="timer-set">
+      <label>Set your test duration (minutes)</label>
+      <div class="timer-input-row">
+        <input type="number" id="timerInput" min="15" max="30" value="20">
+        <span class="unit">minutes</span>
+      </div>
+      <div class="hint" id="timerHint">Choose between 15 and 30 minutes</div>
+    </div>
+    <button class="startbtn" onclick="startMock()">Start Mock</button>
+  </div>
+</div>
+
+<!-- ============ TEST PAGE ============ -->
+<div id="testPage" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">●</div>
+      <button class="btn" onclick="zoomChange(1)">Zoom (+)</button>
+      <button class="btn" onclick="zoomChange(-1)">Zoom (−)</button>
+      <button class="btn-outline" onclick="toggleFullscreen()">Exit Full Screen</button>
+    </div>
+    <div class="title-block">STENO 2026 REASONING 03</div>
+    <div class="topbar-right">
+      <div class="timeleft">Time Left: <span id="timeLeft">--:--</span></div>
+      <button class="pausebtn" onclick="togglePause()">⏸ <span id="pauseLabel">Pause Test</span></button>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <div class="subbar">
+    <div><a>SYMBOLS</a><a>INSTRUCTIONS</a></div>
+    <div class="qanswered">Total Questions answered : <span id="totalAnsweredTop">0</span></div>
+  </div>
+
+  <div class="controlrow">
+    <div class="section-tab" id="sectionTab">Reasoning</div>
+    <div class="navbtns">
+      <button class="btn" onclick="goPrev()">Previous</button>
+      <button class="btn" onclick="markForReview()">Mark for Review</button>
+      <button class="btn" onclick="saveAndNext()">Save &amp; Next</button>
+      <button class="btn submitbtn" onclick="confirmSubmit()">Submit Test</button>
+    </div>
+    <div class="collapse-arrow" onclick="togglePalette()" id="collapseArrow">◀</div>
+  </div>
+
+  <div class="mainwrap">
+    <div class="qpanel">
+      <div class="qpanel-head">
+        <h3 id="qNoHeading">Question No 1</h3>
+        <div><span style="font-weight:600;">Choose Language:</span>
+          <select class="lang-select"><option>English</option></select>
+        </div>
+      </div>
+      <div class="qbody">
+        <div class="qtext" id="qText"></div>
+        <div class="options" id="qOptions"></div>
+      </div>
+      <div class="qfooter">
+        <button class="btn-clear" onclick="clearResponse()">Clear Response</button>
+      </div>
+    </div>
+
+    <div class="palette-wrap" id="paletteWrap">
+      <div class="palette-title">Reasoning :</div>
+      <div class="palette-grid" id="paletteGrid"></div>
+
+      <div class="analytics">
+        <div class="analytics-head">Analytics</div>
+        <table>
+          <tr><td>Answered</td><td id="stAnswered">0</td></tr>
+          <tr><td>Not Answered</td><td id="stNotAnswered">0</td></tr>
+          <tr><td>Marked for review</td><td id="stMarked">0</td></tr>
+          <tr><td>Answered &amp; Marked</td><td id="stAnsMarked">0</td></tr>
+          <tr><td>Not Visited</td><td id="stNotVisited">0</td></tr>
+        </table>
+      </div>
+
+      <div class="legend">
+        <div><span class="dot" style="background:#aab1c0"></span> Not Visited</div>
+        <div><span class="dot" style="background:#f0432f"></span> Not Answered</div>
+        <div><span class="dot" style="background:#17a668"></span> Answered</div>
+        <div><span class="dot" style="background:#8b3fe8"></span> Marked for Review</div>
+        <div><span class="dot" style="background:#8b3fe8"></span> Answered &amp; Marked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT PAGE ============ -->
+<div id="resultPage" class="hidden-page">
+  <div class="resultwrap">
+    <div class="score-hero">
+      <div>
+        <h1 id="resTitle">Test Completed 🎉</h1>
+        <p>STENO 2026 REASONING 03</p>
+      </div>
+      <div class="score-ring"><span>SCORE</span><div id="finalScore">0</div></div>
+    </div>
+    <div class="statgrid">
+      <div class="statcard correct"><b id="stCorrect">0</b>Correct</div>
+      <div class="statcard wrong"><b id="stWrong">0</b>Wrong</div>
+      <div class="statcard unattempt"><b id="stUnattempt">0</b>Unattempted</div>
+      <div class="statcard accuracy"><b id="stAccuracy">0%</b>Accuracy</div>
+    </div>
+    <div class="statgrid">
+      <div class="statcard"><b id="stTimeTaken">--</b>Time Taken</div>
+      <div class="statcard"><b id="stMaxMarks">0</b>Max Marks</div>
+      <div class="statcard"><b id="stNegMarks">0</b>Negative Marks</div>
+      <div class="statcard"><b id="stAvgTime">--</b>Avg Time / Q</div>
+    </div>
+    <div class="resultactions">
+      <button class="secondary" onclick="showSolutions()">View Solutions</button>
+      <button class="primary" onclick="restartTest()">Restart Test</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SOLUTIONS PAGE — same exam-style frame as the test ============ -->
+<div id="solutionPage" class="hidden-page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">●</div>
+      <button class="btn" onclick="zoomChange(1)">Zoom (+)</button>
+      <button class="btn" onclick="zoomChange(-1)">Zoom (−)</button>
+    </div>
+    <div class="title-block">STENO 2026 REASONING 03 — Solutions</div>
+    <div class="topbar-right">
+      <button class="btn" onclick="backToResult()">← Back to Analysis</button>
+    </div>
+  </div>
+
+  <div class="controlrow">
+    <div class="section-tab" id="solSectionTab">Reasoning</div>
+    <div class="navbtns">
+      <button class="btn" onclick="solGoPrev()">Previous</button>
+      <button class="btn" onclick="solGoNext()">Next</button>
+    </div>
+    <div class="collapse-arrow" onclick="toggleSolPalette()" id="solCollapseArrow">◀</div>
+  </div>
+
+  <div class="mainwrap">
+    <div class="qpanel">
+      <div class="qpanel-head">
+        <h3 id="solQNoHeading">Question No 1</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="soltime" id="solTimeTaken">0s</span>
+          <div id="solBadgeHolder"></div>
+        </div>
+      </div>
+      <div class="qbody">
+        <div class="qtext" id="solQText"></div>
+        <div id="solOptions"></div>
+        <div class="explbox" id="solExpl"></div>
+      </div>
+    </div>
+
+    <div class="palette-wrap" id="solPaletteWrap">
+      <div class="palette-title">Reasoning :</div>
+      <div class="palette-grid" id="solPaletteGrid"></div>
+
+      <div class="legend">
+        <div><span class="dot" style="background:#17a668"></span> Correct</div>
+        <div><span class="dot" style="background:#f0432f"></span> Wrong</div>
+        <div><span class="dot" style="background:#aab1c0"></span> Skipped</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pauseoverlay" id="pauseOverlay">
+  <h2>Test Paused</h2>
+  <button class="btn" onclick="togglePause()">Resume Test</button>
+</div>
+
+<div class="modal-bg" id="submitModal">
+  <div class="modal">
+    <h3>Submit Test?</h3>
+    <div class="modal-grid">
+      <div><b id="mAnswered">0</b>Answered</div>
+      <div><b id="mNotAnswered">0</b>Not Answered</div>
+      <div><b id="mMarked">0</b>Marked for Review</div>
+      <div><b id="mNotVisited">0</b>Not Visited</div>
+    </div>
+    <p style="font-size:13px;color:#666;">Once submitted, you cannot change your answers.</p>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeSubmitModal()">Cancel</button>
+      <button class="confirm" onclick="doSubmit()">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [{"qno": 1, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a certain code language, 'SHELF' is coded as '110', and 'TABLE' is coded as '120'. How will 'DESK' be coded in that language?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">10</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">69</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">73</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">85</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 2, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a certain coded language, 'WEES' is coded as 'ZJCO' and 'EACH' is coded as 'HFAD'. How will 'PREY' be coded in the same code language?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QVBV</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">RYCW</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">SWCU</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">SVAU</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 3, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">If 'P + Q' means 'P is the daughter of Q',</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">'P × Q' means 'P is the son of Q',</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">'P - Q' means 'P is the wife of Q'.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">Which of the following options is correct for the given expression?</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">'A + B - C × D'</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B is the son of D</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A is the daughter of D's son</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B is the daughter of D</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">C is the wife of D</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 4, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the option that is related to the fifth letter cluster in the same way as the second letter cluster is related to the first letter cluster and fourth letter cluster is related to third letter cluster.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">AZ :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">FA :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">JS :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">OH :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">KM :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">QO</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">PQ</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">PN</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">NN</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 5, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the option that is related to the fifth number in the same way as the first number is related to the second number and third number is related to fourth number.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">1976 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">57 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">6194 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">33 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">5567 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">34</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">12</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">25</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">47</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 6, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the option that is related to the fourth term in the same way as the first term is related to the second term and the fifth term is related to the sixth term.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">47 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">9 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">? :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">14 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">: </span><span style=\"font-family: 'Arial'; font-size: 11pt;\">92 :</span><span style=\"font-family: 'Arial'; font-size: 11pt;\"> 18</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">73</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">37</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">27</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">72</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 7, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In the following question, set of letter clusters are given. The letter clusters of each set are related to the letter clusters of the same set by some Logic/Rule/Relation. From the given alternatives, select a group of letter clusters which follows the same Logic/Rule/Relation.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">(MB, OF, RK)</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">(DL, FP, IU)</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(XA, ZD, AI)</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(TV, VY, AD)</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(MF, OJ, RO)</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">(TQ, VT, CY)</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 8, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Four different positions of a dice are shown. Select the symbol from the alternatives which will be on the opposite page of the symbol &#39;x&#39;?</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539879.png\" style=\"height:66px; width:286px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539883.png\" style=\"height:44px; width:50px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539885.png\" style=\"height:54px; width:50px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539886.png\" style=\"height:28px; width:50px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539888.png\" style=\"height:38px; width:50px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 9, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">X, B, H</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, ?</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, R, V, B, F, L</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">I</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">L</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">O</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">K</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 10, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">How many pens are there?</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539893.png\" style=\"height:181px; width:203px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">25</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">21</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">16</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Arial'; font-size:11pt\">20</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 11, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Select the odd one out from the given alternatives.</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">31 - 165</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">19 - 105</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">24 - 125</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">13 - 75</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 12, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In a certain code language, 'CLOUDS' is written as 'SBQAJM' and 'BRIGHT' is written as 'EFRZPG'. How will 'DREAMY' be written in that language?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">YKWCBP</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">YKWBPC</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">WKXBPC</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">YKXCPB</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 13, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Read the following statement carefully and identify the conclusion that follows.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt; font-weight: bold;\">Statement:</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">No tree is a plant.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">Some plants are flowers.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt; font-weight: bold;\">Conclusions:</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">I. Some flowers are not trees.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">II. No flower is a tree.</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Only conclusion I follows.</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Only conclusion II follows.</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Either conclusion I or II follows.</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Neither conclusion I nor II follows.</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 14, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">In what ways the letters of the word \"PUZZLE\" can be arranged to form the different new words so that the vowels always come together?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">280</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">450</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">630</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">120</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 15, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.</span><br><span style=\"font-family: 'Arial'; font-size: 11pt;\">-89, -176</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, ?</span><span style=\"font-family: 'Arial'; font-size: 11pt;\">, -698, -1394, -2786, -5570</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-350</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-354</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-347</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">-352</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 16, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">You are a university dean and a student accuses a professor of plagiarism. What is your first step?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Suspend the professor.</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Call media to expose the professor.</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Initiate internal inquiry with academic council.</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Ask the student to withdraw complaint.</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 17, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Speed of 5 cars J, K, L, M and N is compared. Speed of no two cars is same. Speed of J is more than K. Speed of K is second lowest. Speed of L is less than N but more than M. Speed of J is less than only one car. Speed of which of the following car is more than J?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">N</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">L</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">M</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">K</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 18, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">A clock shows the correct time at 6 AM. The clock gains 2 seconds every 5 minutes. What time (in PM) will it show at 4 PM the same day?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4:04</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4:03</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4:06</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">4:01</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 19, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">What will be the sum of number of days in the month of January, February, March and April in the year 2100?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">117</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">118</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">120</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">119</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 20, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">What was the first day of the year 1906?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Sunday</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Monday</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Wednesday</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">Friday</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 21, "qhtml": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">7 boys B1, B2, B3, B4, B5, B6 and B7 are sitting around a circular table facing opposite to the centre (not necessarily in the same order). B3 is not next to B7. B4 is next to both B1 and B7. B6 is second to the left of B7. B5 is second to the left of B6. Who is to the immediate left of B3?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B6</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B1</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B2</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Arial'; font-size: 11pt;\">B5</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 22, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the sign of question mark (?) from the given alternatives.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539929.png\" style=\"height:57px; width:300px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539931.png\" style=\"height:81px; width:80px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539933.png\" style=\"height:81px; width:80px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539935.png\" style=\"height:79px; width:80px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539937.png\" style=\"height:82px; width:80px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 23, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">In the following figure series, select the figure which can be placed at the sign of question mark (?) from the given alternatives.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539940.png\" style=\"height:56px; width:294px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539942.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539944.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539945.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539947.png\" style=\"height:71px; width:70px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 24, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Two figures given on the left side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> are related with some logic/rule/relation. Select the missing figure on the right side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> from the given alternatives based on the same logic/rule/relation.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539950.png\" style=\"height:53px; width:279px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539952.png\" style=\"height:72px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539953.png\" style=\"height:72px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539954.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/Screenshot 2026-08-24 161416.png\" style=\"height:72px; width:70px\" /></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 25, "qhtml": "<p><span style=\"font-family:'Arial'; font-size:11pt\">Two figures given on the left side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> are related with some logic/rule/relation. Select the missing figure on the right side of </span><span style=\"font-family:'Arial'; font-size:11pt\">(::)</span><span style=\"font-family:'Arial'; font-size:11pt\"> from the given alternatives based on the same logic/rule/relation.</span></p>\r\n\r\n<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539959.png\" style=\"height:62px; width:340px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539961.png\" style=\"height:71px; width:70px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539963.png\" style=\"height:69px; width:70px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539964.png\" style=\"height:70px; width:70px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/joKDj1787567539966.png\" style=\"height:70px; width:70px\" /></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 26, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">If 'ECONOMIC' is written as '#$%@%</span><span style=\"font-family: 'Cambria Math'; font-size: 11pt;\">????</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">&amp; $' and</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">'CAREER' is written as '$≤¥##¥', then 'CINEMA' will be</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">written as?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">&amp; $%#β≤</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">#&amp;@β≤ $</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">$β%μ&amp; @</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">$&amp;@#β≤ </span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 27, "qhtml": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">In a certain coded language &#39;CRANK&#39; is coded as &#39;FWZLG&#39; and &#39;FEMME&#39; is coded as &#39;IJLKA&#39;. How will &#39;GUTSY&#39; be coded in the same code language?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">KZURW</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">LXSOW</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">IASSV</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">JZSQU</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 28, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">In the following question, set of letter clusters are given. The letter clusters of each set are related to the letter clusters of the same set by some Logic/Rule/Relation. From the given alternatives, select a group of letter clusters which follows the same Logic/Rule/Relation.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(GW, ES, CO)</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(AR, YN, WJ)</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">(UF, SB, QX)</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">(SQ, QO, MH)</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">(GP, EN, AK)</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">(HB, FZ, BW)</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 29, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">A series is given with one term missing. Select the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">correct alternative from the given ones that will</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">complete the series.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">EF, GD, JA, LW, ?, QL, TE, VW</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">OR</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">NR</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">LP</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">OS</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 30, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">A series is given with one term missing. Select the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">correct alternative from the given ones that will</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">complete the series.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">RD, TX, XR, ZL, DF, FZ, ?, LN</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">JV</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">JT</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">MT</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">IR</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 31, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Select the option that is related to the fourth letter-number cluster in the same way as the first letter-number cluster is related to the second letter-number cluster and fifth letternumber</span><span style=\"font-family:'Noto Sans'; font-size:11pt\"> cluster is related to sixth </span><span style=\"font-family:'Noto Sans'; font-size:11pt\">letternumber</span><span style=\"font-family:'Noto Sans'; font-size:11pt\"> cluster.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(NOTE: Operations should be performed on the whole numbers, without breaking down the numbers into its constituent digits. E.g.13 &ndash; Operations on 13 such as adding /subtracting /multiplying etc. to 13 can be performed. Breaking down 13 into 1 and 3 and then performing mathematical operations on 1 and 3 is not allowed)</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">QR75 : NO28 :: ? : BS46 :: MN99 : JK52</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">EV93</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">VE95</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">EW92</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">FV93</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 32, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Select the option that is related to the fifth letter-number cluster in the same way as the second letter-number cluster is related to the first letter-number cluster and the fourth letter-number</span><span style=\"font-family:'Noto Sans'; font-size:11pt\"> cluster is related to the third </span><span style=\"font-family:'Noto Sans'; font-size:11pt\">letter-number</span><span style=\"font-family:'Noto Sans'; font-size:11pt\"> cluster. </span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(NOTE: Operations should be performed on the whole numbers, without breaking down the numbers into its constituent digits. E.g., 13 &ndash; Operations on 13, such as adding /subtracting /multiplying etc. to 13 can be performed. Breaking down 13 into 1 and 3 and then performing mathematical operations on 1 and 3 is not</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">allowed)</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">KLP8 : FGV100 :: MSB5 : HNH49 :: ZXO9 : ?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">USX100</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">SXU81</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">SUU121</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">USU121</span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 33, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">A series is given with one term missing. Select the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">correct alternative from the given ones that will</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">complete the series.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">HN108, ?, LH276, NE360, PB444</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">KL194</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">JK192</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">IJ193</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">KJ191</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 34, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">A series is given with one term missing. Select the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">correct alternative from the given ones that will</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">complete the series.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">ZBU500, AAV708, BZW916, CYX1124, ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">YDX1323</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">DXY1332</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">XYD1232</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">DYX1233</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 35, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Select the option that is related to the fourth number in the same way as the first number is related to the second number and fifth number is related to sixth number.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(NOTE: Operations should be performed on the whole numbers, without breaking down the numbers into its constituent digits. E.g.13 &ndash; Operations on 13 such as adding/subtracting /multiplying etc. to 13 can be performed. Breaking down 13 into 1 and 3 and then performing mathematical operations on 1 and 3 is not allowed)</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">2809 : 2761 :: ? : 5520 :: 2487 : 2439</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">5572</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">5573</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">5568</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">5574</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 36, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Select the option that is related to the fifth number in the same way as the second number is related to the first number and fourth number is related to third number.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">(NOTE: Operations should be performed on the whole numbers, without breaking down the numbers into its constituent digits. E.g.13 &ndash; Operations on 13 such as adding /subtracting /multiplying etc. to 13 can be performed. Breaking down 13 into 1 and 3 and then performing mathematical operations on 1 and 3 is not allowed)</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">27 : 841 :: 21 : 529 :: 17 : ?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">256</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">361</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">225</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">324</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 37, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">A series is given with one term wrong. Select the wrong term from the given alternatives.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">-598, -607, -616, -625, -634, -644, -652, -661</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">-616</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">-598</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">-644</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">-652</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 38, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">A series is given with one term missing. Select the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">correct alternative from the given ones that will</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">complete the series.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">-16, -12, -7, -1, 6, 14, 23, ?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">30</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">36</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">33</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">32</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 39, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.</span></p>\r\n\r\n<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">-334, ?, -355, -367, -380, -394, -409, -425</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">-341</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">-344</span></p>", "image": null}, {"label": "C", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">-343</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">-347</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 40, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Height of 6 boys M, N, O, P, Q and R is compared. Height of M is less than only Q and O. Height of P is more than R but less than N. Height of no two boys is same. O is the tallest boy among these boys. Height of how many boys is more than N?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">3</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">4</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">2</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">1</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 41, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">At what time (approximately) (in AM) between 6 AM and 7 AM will the hour and minute hands of the clock overlap?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">6:30</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">6:33</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">6:38</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">6:36</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 42, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">A clock shows the correct time at 10 AM. The clock gains 3 seconds every 4 minutes. What time (in PM) will it show at 8 PM the same day?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">8:05:10</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">8:07:30</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">8:06:50</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">8:04:10</span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 43, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">5 persons J, K, L, M and N are sitting in a row facing north (not necessarily in the same order). N and M are at the extreme ends of the row. K is the immediate neighbour of J and M. L is to the left of J. Who is sitting in the middle of the row?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">L</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">K</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">J</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">N</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 44, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Ch</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">oose the address that is the same as the one given below.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Sample Address:</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Room No. 5, Block-B, Hostel 1, IIT Kanpur, Uttar Pradesh - 208016</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Room No. 5, Block B, Hostel 1, IIT Kanpur, Uttar Pradesh - 208016</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Room No. 5, Block-B, Hostel 1, IIT Kanpur, Uttar Pradesh - 208016</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Room No. 5, Block-B, Hostel I, IIT Kanpur, Uttar Pradesh - 208016</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Room No. 6, Block-B, Hostel 1, IIT Kanpur, Uttar Pradesh - 208016 </span></p>", "image": null}], "correct": "B", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 45, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">In a group of students, 12 play Football, 8 play Hockey, and 5 play both. How many play only Football?</span></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">7</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">5</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">6</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">8</span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 46, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Which of the following best represents the</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">relationship among Doctors, Males, and Surgeons?</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">All Surgeons are Doctors and some Doctors are</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Males</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">All Surgeons are Males and some Males are Doctors</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">All Surgeons are Doctors and all Doctors are Males</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">All Surgeons are Doctors; some Doctors are Males,</span></p><p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">and some Surgeons are Males </span></p>", "image": null}], "correct": "D", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 47, "qhtml": "<p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">In each of the following questions, a</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">statement is given followed by 2</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">conclusions. Read the statements</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> carefully</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> answer the following</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">questions:</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Statement: It is almost impossible to</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">survive and prosper in this world</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">without sacrificing ethics and</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">morality.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Conclusions:</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">I. World appreciates some concepts</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">but may not uphold it.</span></p><p style=\"text-align: justify; margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">II. Concept of ethics and morality are</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">not practicable in life.</span></p>", "qimage": null, "options": [{"label": "A", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Only I follows</span></p>", "image": null}, {"label": "B", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Only II follows</span></p>", "image": null}, {"label": "C", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Neither I nor II follows</span></p>", "image": null}, {"label": "D", "html": "<p style=\"margin-top: 0; margin-bottom: 0;\"><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\">Both II and III follow</span><span style=\"font-family: 'Noto Sans'; font-size: 11pt;\"> </span></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 48, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Two figures given on the left side of (::) are related with some logic/rule/relation. Select the missing figure on the right side of (::) from the given alternatives based on the same logic/rule/relation.</span></p>\r\n\r\n<p style=\"text-align:justify\"><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745179.png\" style=\"height:112px; width:592px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745184.png\" style=\"height:207px; width:205px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745187.png\" style=\"height:217px; width:213px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745190.png\" style=\"height:222px; width:220px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745193.png\" style=\"height:229px; width:225px\" /></p>", "image": null}], "correct": "A", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 49, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Two figures given on the left side of (::) are related with some logic/rule/relation. Select the missing figure on the right side of (::) from the given alternatives based on the same logic/rule/relation.</span></p>\r\n\r\n<p style=\"text-align:justify\"><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745204.png\" style=\"height:111px; width:592px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745211.png\" style=\"height:213px; width:214px\" /></p>", "image": null}, {"label": "B", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745215.png\" style=\"height:219px; width:216px\" /></p>", "image": null}, {"label": "C", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745219.png\" style=\"height:226px; width:226px\" /></p>", "image": null}, {"label": "D", "html": "<p><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745223.png\" style=\"height:223px; width:226px\" /></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}, {"qno": 50, "qhtml": "<p style=\"text-align:justify\"><span style=\"font-family:'Noto Sans'; font-size:11pt\">Count the number of squares in the given figure</span><span style=\"font-family:'Noto Sans'; font-size:11pt\">.</span></p>\r\n\r\n<p style=\"text-align:justify\"><img src=\"https://www.testranking.in/admin/assets/uploads/ckeditor/28yEE1783274745233.png\" style=\"height:104px; width:200px\" /></p>\r\n", "qimage": null, "options": [{"label": "A", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">11</span></p>", "image": null}, {"label": "B", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">2</span><span style=\"font-family:'Noto Sans'; font-size:11pt\">1</span></p>", "image": null}, {"label": "C", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">24</span></p>", "image": null}, {"label": "D", "html": "<p><span style=\"font-family:'Noto Sans'; font-size:11pt\">26</span></p>", "image": null}], "correct": "C", "explanation": "Watch video solution", "marks": 1.0, "section": "Reasoning"}];
+const POS_MARK = 1;
+const NEG_MARK = 0.25;
+const MIN_MIN = 15;
+const MAX_MIN = 30;
+
+let DURATION_SEC = 20 * 60;
+let current = 0;
+let solIndex = 0;
+let zoomLevel = 1;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let paused = false;
+
+const state = QUESTIONS.map(() => ({status:'notvisited', selected:null}));
+const qTimeSpent = QUESTIONS.map(() => 0);
+
+function $(id){ return document.getElementById(id); }
+
+/* ================= WELCOME / START ================= */
+function startMock(){
+  let val = parseInt($('timerInput').value, 10);
+  if(isNaN(val)){ val = 20; }
+  if(val < MIN_MIN || val > MAX_MIN){
+    val = Math.max(MIN_MIN, Math.min(MAX_MIN, val));
+    $('timerInput').value = val;
+    $('timerHint').textContent = 'Adjusted to allowed range (15–30 minutes)';
+    $('timerHint').classList.add('err');
+  }
+  DURATION_SEC = val * 60;
+  timeLeft = DURATION_SEC;
+  $('welcomePage').style.display = 'none';
+  $('testPage').style.display = 'block';
+  renderQuestion();
+  startTimer();
+}
+
+/* ================= TEST PAGE LOGIC ================= */
+function renderOptionHtml(o){
+  let imgHtml = o.image ? `<img src="${o.image}" alt="option ${o.label}">` : '';
+  return `<div class="opt-content">${o.html || ''}${imgHtml}</div>`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  if(state[current].status === 'notvisited') state[current].status = 'notanswered';
+  $('qNoHeading').textContent = 'Question No ' + q.qno;
+  $('sectionTab').textContent = q.section || '';
+  let qHtml = q.qhtml || '';
+  if(q.qimage){ qHtml += `<div class="qimg-wrap"><img src="${q.qimage}" alt="question figure"></div>`; }
+  $('qText').innerHTML = qHtml;
+  const optsHtml = q.options.map(o => {
+    const checked = state[current].selected === o.label ? 'checked' : '';
+    return `<label><input type="radio" name="opt" value="${o.label}" ${checked} onclick="selectOption('${o.label}')"> <b>${o.label})</b> ${renderOptionHtml(o)}</label>`;
+  }).join('');
+  $('qOptions').innerHTML = optsHtml;
+  renderPalette();
+  updateTopAnsweredCount();
+}
+
+function selectOption(label){ state[current].selected = label; }
+
+function saveAndNext(){
+  if(state[current].selected !== null){
+    state[current].status = (state[current].status === 'marked' || state[current].status === 'markedans') ? 'markedans' : 'answered';
+  } else if(state[current].status === 'marked' || state[current].status === 'markedans'){
+    state[current].status = 'marked';
+  } else {
+    state[current].status = 'notanswered';
+  }
+  goTo(Math.min(current+1, QUESTIONS.length-1));
+}
+
+function markForReview(){
+  state[current].status = state[current].selected !== null ? 'markedans' : 'marked';
+  goTo(Math.min(current+1, QUESTIONS.length-1));
+}
+
+function clearResponse(){
+  state[current].selected = null;
+  state[current].status = (state[current].status === 'marked' || state[current].status === 'markedans') ? 'marked' : 'notanswered';
+  renderQuestion();
+}
+
+function goPrev(){ goTo(Math.max(current-1,0)); }
+function goTo(idx){ current = idx; renderQuestion(); }
+
+function renderPalette(){
+  let html = '';
+  let counts = {notvisited:0, notanswered:0, answered:0, marked:0, markedans:0};
+  QUESTIONS.forEach((q,i) => {
+    const st = state[i].status;
+    counts[st] = (counts[st]||0) + 1;
+    const curCls = i === current ? 'current' : '';
+    html += `<button class="qnum ${st} ${curCls}" onclick="goTo(${i})">${q.qno}</button>`;
+  });
+  $('paletteGrid').innerHTML = html;
+  $('stAnswered').textContent = counts.answered;
+  $('stNotAnswered').textContent = counts.notanswered;
+  $('stMarked').textContent = counts.marked;
+  $('stAnsMarked').textContent = counts.markedans;
+  $('stNotVisited').textContent = counts.notvisited;
+}
+
+function updateTopAnsweredCount(){
+  const answered = state.filter(s => s.status==='answered' || s.status==='markedans').length;
+  $('totalAnsweredTop').textContent = answered;
+}
+
+function togglePalette(){
+  const p = $('paletteWrap');
+  p.classList.toggle('hidden');
+  $('collapseArrow').textContent = p.classList.contains('hidden') ? '▶' : '◀';
+}
+
+function zoomChange(dir){
+  zoomLevel = Math.min(1.6, Math.max(0.75, zoomLevel + dir*0.1));
+  document.documentElement.style.setProperty('--zoom', zoomLevel);
+}
+
+function toggleFullscreen(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
+  else { document.exitFullscreen().catch(()=>{}); }
+}
+
+function togglePause(){
+  paused = !paused;
+  $('pauseOverlay').classList.toggle('show', paused);
+  $('pauseLabel').textContent = paused ? 'Resume' : 'Pause Test';
+}
+
+function startTimer(){
+  timerHandle = setInterval(() => {
+    if(paused) return;
+    timeLeft--;
+    qTimeSpent[current] = (qTimeSpent[current]||0) + 1;
+    if(timeLeft <= 0){ timeLeft = 0; clearInterval(timerHandle); doSubmit(); }
+    renderTime();
+  }, 1000);
+  renderTime();
+}
+
+function renderTime(){
+  const m = Math.floor(timeLeft/60), s = timeLeft % 60;
+  $('timeLeft').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function confirmSubmit(){
+  renderPalette();
+  const counts = {notvisited:0, notanswered:0, answered:0, marked:0, markedans:0};
+  state.forEach(s => counts[s.status] = (counts[s.status]||0)+1);
+  $('mAnswered').textContent = counts.answered + counts.markedans;
+  $('mNotAnswered').textContent = counts.notanswered;
+  $('mMarked').textContent = counts.marked + counts.markedans;
+  $('mNotVisited').textContent = counts.notvisited;
+  $('submitModal').classList.add('show');
+}
+function closeSubmitModal(){ $('submitModal').classList.remove('show'); }
+
+function doSubmit(){
+  closeSubmitModal();
+  clearInterval(timerHandle);
+  const timeTakenSec = DURATION_SEC - timeLeft;
+  let correct=0, wrong=0, unattempt=0, marks=0, negMarksTotal=0;
+  QUESTIONS.forEach((q,i) => {
+    const sel = state[i].selected;
+    if(sel === null || sel === undefined){ unattempt++; }
+    else if(sel === q.correct){ correct++; marks += (q.marks !== undefined ? q.marks : POS_MARK); }
+    else { wrong++; negMarksTotal += NEG_MARK; marks -= NEG_MARK; }
+  });
+  const maxMarks = QUESTIONS.reduce((a,q) => a + (q.marks !== undefined ? q.marks : POS_MARK), 0);
+  const attempted = correct + wrong;
+  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : '0.0';
+
+  $('finalScore').textContent = marks.toFixed(2);
+  $('stCorrect').textContent = correct;
+  $('stWrong').textContent = wrong;
+  $('stUnattempt').textContent = unattempt;
+  $('stAccuracy').textContent = accuracy + '%';
+  $('stMaxMarks').textContent = maxMarks;
+  $('stNegMarks').textContent = negMarksTotal.toFixed(2);
+  $('stTimeTaken').textContent = fmtTime(timeTakenSec);
+  $('stAvgTime').textContent = fmtTime(Math.round(timeTakenSec / QUESTIONS.length));
+
+  $('testPage').style.display = 'none';
+  $('resultPage').classList.remove('hidden-page');
+}
+
+function fmtTime(sec){ const m = Math.floor(sec/60), s = sec%60; return m + 'm ' + s + 's'; }
+
+/* ================= SOLUTIONS PAGE (exam-style, one Q at a time) ================= */
+function solStatus(i){
+  const sel = state[i].selected;
+  const q = QUESTIONS[i];
+  if(sel === null || sel === undefined) return 'skipped';
+  return sel === q.correct ? 'correct' : 'wrong';
+}
+
+function renderSolPalette(){
+  let html = '';
+  QUESTIONS.forEach((q,i) => {
+    const st = solStatus(i);
+    const cls = st === 'correct' ? 'solcorrect' : st === 'wrong' ? 'solwrong' : 'solskipped';
+    const curCls = i === solIndex ? 'current' : '';
+    html += `<button class="qnum ${cls} ${curCls}" onclick="solGoTo(${i})">${q.qno}</button>`;
+  });
+  $('solPaletteGrid').innerHTML = html;
+}
+
+function renderSolQuestion(){
+  const q = QUESTIONS[solIndex];
+  const sel = state[solIndex].selected;
+  const st = solStatus(solIndex);
+  $('solQNoHeading').textContent = 'Question No ' + q.qno;
+  $('solSectionTab').textContent = q.section || '';
+  $('solTimeTaken').textContent = 'Time taken: ' + fmtTime(qTimeSpent[solIndex] || 0);
+  let qHtml = q.qhtml || '';
+  if(q.qimage){ qHtml += `<div class="qimg-wrap"><img src="${q.qimage}" alt="question figure"></div>`; }
+  $('solQText').innerHTML = qHtml;
+  const badge = st === 'correct' ? '<span class="sol-badge correct">Correct</span>'
+              : st === 'wrong' ? '<span class="sol-badge wrong">Wrong</span>'
+              : '<span class="sol-badge skipped">Skipped</span>';
+  $('solBadgeHolder').innerHTML = badge;
+
+  let optsHtml = q.options.map(o => {
+    let cls = '', tag = '';
+    if(o.label === q.correct){ cls='right'; tag='<span class="tagmini">CORRECT</span>'; }
+    else if(o.label === sel && sel !== q.correct){ cls='picked-wrong'; tag='<span class="tagmini">YOUR ANSWER</span>'; }
+    return `<div class="soloption ${cls}"><b>${o.label})</b> ${renderOptionHtml(o)} ${tag}</div>`;
+  }).join('');
+  $('solOptions').innerHTML = optsHtml;
+  $('solExpl').innerHTML = q.explanation ? `<b>Explanation:</b> ${q.explanation}` : '<b>Explanation:</b> Not available.';
+  renderSolPalette();
+}
+
+function solGoTo(i){ solIndex = i; renderSolQuestion(); }
+function solGoNext(){ solGoTo(Math.min(solIndex+1, QUESTIONS.length-1)); }
+function solGoPrev(){ solGoTo(Math.max(solIndex-1, 0)); }
+
+function toggleSolPalette(){
+  const p = $('solPaletteWrap');
+  p.classList.toggle('hidden');
+  $('solCollapseArrow').textContent = p.classList.contains('hidden') ? '▶' : '◀';
+}
+
+function showSolutions(){
+  $('resultPage').classList.add('hidden-page');
+  $('solutionPage').classList.remove('hidden-page');
+  solIndex = 0;
+  renderSolQuestion();
+}
+function backToResult(){
+  $('solutionPage').classList.add('hidden-page');
+  $('resultPage').classList.remove('hidden-page');
+}
+function restartTest(){ location.reload(); }
+</script>
+</body>
+</html>
