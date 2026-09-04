@@ -224,7 +224,11 @@
   .xpen-clear-btn:hover{background:#ffe4de;}
 
   .qpanel{position:relative;}
-  #xpenCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;touch-action:pan-y;z-index:5;}
+  #xpenCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;}
+  #xpenCanvas.locked{pointer-events:auto;touch-action:none;}
+  .xpen-lock-btn{display:none;}
+  .xpen-lock-btn.show{display:inline-flex;align-items:center;gap:6px;}
+  .xpen-lock-btn.on{background:linear-gradient(135deg,#f0432f,#c92c1a);box-shadow:0 2px 6px rgba(240,67,47,.35);}
 
   @media(max-width:900px){
     .mainwrap{flex-direction:column;}
@@ -314,6 +318,7 @@
     <div class="section-tab" id="sectionTab">Reasoning</div>
     <div class="navbtns">
       <button class="btn" onclick="goPrev()">Previous</button>
+      <button class="btn xpen-lock-btn" id="xpenLockBtn" onclick="toggleXpenLock()">🖊️ Pen: OFF</button>
       <button class="btn" onclick="markForReview()">Mark for Review</button>
       <button class="btn" onclick="saveAndNext()">Save &amp; Next</button>
       <button class="btn submitbtn" onclick="confirmSubmit()">Submit Test</button>
@@ -730,11 +735,12 @@ function backToResult(){
 }
 function restartTest(){ location.reload(); }
 
-/* ================= XPEN (Apple Pencil-only drawing) ================= */
+/* ================= XPEN (Apple Pencil-only drawing, with lock toggle) ================= */
 let xpenEnabled = false;
 let xpenTool = 'pen';
 let xpenColor = '#1a2233';
 let xpenThickness = 3.5;
+let xpenLocked = false;
 let xpenCanvas, xpenCtx;
 let xpenDrawing = false;
 let xpenActivePointerId = null;
@@ -746,9 +752,13 @@ function initXpen(){
   xpenCanvas = $('xpenCanvas');
   xpenCtx = xpenCanvas.getContext('2d');
   $('xpenIconBtn').classList.toggle('show', xpenEnabled);
+  $('xpenLockBtn').classList.toggle('show', xpenEnabled);
   resizeXpenCanvas();
   window.addEventListener('resize', resizeXpenCanvas);
-  document.addEventListener('pointerdown', xpenPointerDown, {capture:true});
+  xpenCanvas.addEventListener('pointerdown', xpenPointerDown);
+  xpenCanvas.addEventListener('pointermove', xpenPointerMove);
+  xpenCanvas.addEventListener('pointerup', xpenPointerUp);
+  xpenCanvas.addEventListener('pointercancel', xpenPointerUp);
 }
 
 function resizeXpenCanvas(){
@@ -801,15 +811,27 @@ function clearXpenCanvas(){
   qDrawings[current] = null;
 }
 
+/* Lock toggle: when ON -> canvas grabs ALL pointer input (blocks scroll/finger
+   movement completely); only pointerType 'pen' actually draws, finger/mouse
+   touches are simply absorbed (no scroll, no accidental option click).
+   When OFF -> canvas is fully pass-through, app behaves exactly as normal. */
+function toggleXpenLock(){
+  if(!xpenEnabled) return;
+  xpenLocked = !xpenLocked;
+  xpenCanvas.classList.toggle('locked', xpenLocked);
+  const btn = $('xpenLockBtn');
+  btn.textContent = xpenLocked ? '🖊️ Pen: ON' : '🖊️ Pen: OFF';
+  btn.classList.toggle('on', xpenLocked);
+}
+
 function xpenPointerDown(e){
-  if(!xpenEnabled || e.pointerType !== 'pen') return;
-  if(!xpenCanvas || $('testPage').style.display === 'none') return;
-  const rect = xpenCanvas.getBoundingClientRect();
-  if(e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+  if(!xpenLocked) return;
   e.preventDefault();
-  e.stopPropagation();
+  if(e.pointerType !== 'pen') return;
   xpenDrawing = true;
   xpenActivePointerId = e.pointerId;
+  xpenCanvas.setPointerCapture(e.pointerId);
+  const rect = xpenCanvas.getBoundingClientRect();
   const x = e.clientX - rect.left, y = e.clientY - rect.top;
   xpenCtx.lineCap = 'round';
   xpenCtx.lineJoin = 'round';
@@ -823,27 +845,24 @@ function xpenPointerDown(e){
   }
   xpenCtx.beginPath();
   xpenCtx.moveTo(x, y);
-  window.addEventListener('pointermove', xpenPointerMove, {capture:true});
-  window.addEventListener('pointerup', xpenPointerUp, {capture:true});
-  window.addEventListener('pointercancel', xpenPointerUp, {capture:true});
 }
 
 function xpenPointerMove(e){
-  if(!xpenDrawing || e.pointerId !== xpenActivePointerId) return;
+  if(!xpenLocked) return;
   e.preventDefault();
+  if(!xpenDrawing || e.pointerId !== xpenActivePointerId) return;
   const rect = xpenCanvas.getBoundingClientRect();
   xpenCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   xpenCtx.stroke();
 }
 
 function xpenPointerUp(e){
+  if(!xpenLocked) return;
+  e.preventDefault();
   if(e.pointerId !== xpenActivePointerId) return;
   xpenDrawing = false;
   xpenActivePointerId = null;
   qDrawings[current] = xpenCanvas.toDataURL();
-  window.removeEventListener('pointermove', xpenPointerMove, {capture:true});
-  window.removeEventListener('pointerup', xpenPointerUp, {capture:true});
-  window.removeEventListener('pointercancel', xpenPointerUp, {capture:true});
 }
 
 function saveXpenDrawing(){
