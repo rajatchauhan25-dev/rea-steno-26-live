@@ -192,6 +192,40 @@
   .explbox{margin-top:14px;background:linear-gradient(180deg,#f2f6ff,#eef2ff);border-left:4px solid var(--blue);padding:13px 16px;font-size:calc(13.5px*var(--zoom));border-radius:0 10px 10px 0;line-height:1.55;}
   .explbox b{color:var(--blue-dark);}
 
+  /* ============ XPEN FEATURE ============ */
+  .xpen-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f4f6fb;border-radius:12px;padding:12px 16px;margin-bottom:22px;}
+  .xpen-toggle-row .xlabel{display:flex;flex-direction:column;align-items:flex-start;text-align:left;}
+  .xpen-toggle-row .xlabel b{font-size:14px;color:var(--ink);}
+  .xpen-toggle-row .xlabel span{font-size:11px;color:#8a90a0;}
+  .xswitch{position:relative;width:46px;height:26px;flex-shrink:0;}
+  .xswitch input{opacity:0;width:0;height:0;}
+  .xswitch .slider{position:absolute;inset:0;background:#c7cbda;border-radius:26px;cursor:pointer;transition:.2s;}
+  .xswitch .slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  .xswitch input:checked + .slider{background:linear-gradient(135deg,var(--blue),var(--blue-dark));}
+  .xswitch input:checked + .slider::before{transform:translateX(20px);}
+
+  .xpen-icon-btn{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#eef1f7;border:none;cursor:pointer;font-size:16px;transition:.12s;position:relative;}
+  .xpen-icon-btn.show{display:flex;}
+  .xpen-icon-btn:hover{background:#e3e7f1;}
+  .xpen-icon-btn.active{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;}
+
+  .xpen-popover{position:absolute;top:44px;left:0;background:#fff;border-radius:12px;box-shadow:0 12px 32px rgba(20,30,60,.22);border:1px solid var(--panel-border);padding:14px;width:220px;z-index:50;display:none;}
+  .xpen-popover.show{display:block;}
+  .xpen-popover .xrow{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .xpen-popover .xrow:last-child{margin-bottom:0;}
+  .xpen-tool-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--panel-border);background:#fff;cursor:pointer;font-size:12.5px;font-weight:600;color:#555;}
+  .xpen-tool-btn.active{background:var(--blue-light);border-color:var(--blue);color:var(--blue-dark);}
+  .xcolor-dot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;}
+  .xcolor-dot.active{border-color:#1a2233;box-shadow:0 0 0 2px #fff inset;}
+  .xthick-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--panel-border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .xthick-btn.active{background:var(--blue-light);border-color:var(--blue);}
+  .xthick-btn span{background:#333;border-radius:50%;}
+  .xpen-clear-btn{width:100%;padding:7px 0;border-radius:8px;border:none;background:#fff3f0;color:var(--red);font-weight:700;font-size:12px;cursor:pointer;margin-top:2px;}
+  .xpen-clear-btn:hover{background:#ffe4de;}
+
+  .qpanel{position:relative;}
+  #xpenCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;touch-action:pan-y;z-index:5;}
+
   @media(max-width:900px){
     .mainwrap{flex-direction:column;}
     .palette-wrap{width:100%;margin-left:0;margin-top:14px;}
@@ -213,6 +247,13 @@
       <div><b>50.0</b><span>Max Marks</span></div>
       <div><b>+1 / -0.25</b><span>Marking</span></div>
     </div>
+    <div class="xpen-toggle-row">
+      <div class="xlabel"><b>✏️ Xpen</b><span>Draw with Apple Pencil only</span></div>
+      <label class="xswitch">
+        <input type="checkbox" id="xpenToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
     <div class="timer-set">
       <label>Set your test duration (minutes)</label>
       <div class="timer-input-row">
@@ -233,6 +274,28 @@
       <button class="btn" onclick="zoomChange(1)">Zoom (+)</button>
       <button class="btn" onclick="zoomChange(-1)">Zoom (−)</button>
       <button class="btn-outline" onclick="toggleFullscreen()">Exit Full Screen</button>
+      <div style="position:relative;">
+        <button class="xpen-icon-btn" id="xpenIconBtn" onclick="toggleXpenPopover()" title="Xpen">✏️</button>
+        <div class="xpen-popover" id="xpenPopover">
+          <div class="xrow">
+            <button class="xpen-tool-btn active" id="xpenToolPen" onclick="setXpenTool('pen')">✏️ Pen</button>
+            <button class="xpen-tool-btn" id="xpenToolEraser" onclick="setXpenTool('eraser')">🧹 Eraser</button>
+          </div>
+          <div class="xrow" id="xpenColorRow">
+            <div class="xcolor-dot active" style="background:#1a2233" onclick="setXpenColor('#1a2233', this)"></div>
+            <div class="xcolor-dot" style="background:#f0432f" onclick="setXpenColor('#f0432f', this)"></div>
+            <div class="xcolor-dot" style="background:#3b6df0" onclick="setXpenColor('#3b6df0', this)"></div>
+            <div class="xcolor-dot" style="background:#17a668" onclick="setXpenColor('#17a668', this)"></div>
+            <div class="xcolor-dot" style="background:#8b3fe8" onclick="setXpenColor('#8b3fe8', this)"></div>
+          </div>
+          <div class="xrow" id="xpenThickRow">
+            <button class="xthick-btn" onclick="setXpenThickness(2, this)"><span style="width:5px;height:5px;"></span></button>
+            <button class="xthick-btn active" onclick="setXpenThickness(3.5, this)"><span style="width:8px;height:8px;"></span></button>
+            <button class="xthick-btn" onclick="setXpenThickness(6, this)"><span style="width:12px;height:12px;"></span></button>
+          </div>
+          <button class="xpen-clear-btn" onclick="clearXpenCanvas()">Clear Drawing</button>
+        </div>
+      </div>
     </div>
     <div class="title-block">STENO 2026 REASONING 01</div>
     <div class="topbar-right">
@@ -260,6 +323,7 @@
 
   <div class="mainwrap">
     <div class="qpanel">
+      <canvas id="xpenCanvas"></canvas>
       <div class="qpanel-head">
         <h3 id="qNoHeading">Question No 1</h3>
         <div><span style="font-weight:600;">Choose Language:</span>
@@ -438,6 +502,7 @@ function startMock(){
   timeLeft = DURATION_SEC;
   $('welcomePage').style.display = 'none';
   $('testPage').style.display = 'block';
+  initXpen();
   renderQuestion();
   startTimer();
 }
@@ -463,6 +528,7 @@ function renderQuestion(){
   $('qOptions').innerHTML = optsHtml;
   renderPalette();
   updateTopAnsweredCount();
+  loadXpenDrawing();
 }
 
 function selectOption(label){ state[current].selected = label; }
@@ -490,7 +556,7 @@ function clearResponse(){
 }
 
 function goPrev(){ goTo(Math.max(current-1,0)); }
-function goTo(idx){ current = idx; renderQuestion(); }
+function goTo(idx){ saveXpenDrawing(); current = idx; renderQuestion(); }
 
 function renderPalette(){
   let html = '';
@@ -518,11 +584,13 @@ function togglePalette(){
   const p = $('paletteWrap');
   p.classList.toggle('hidden');
   $('collapseArrow').textContent = p.classList.contains('hidden') ? '▶' : '◀';
+  setTimeout(resizeXpenCanvas, 210);
 }
 
 function zoomChange(dir){
   zoomLevel = Math.min(1.6, Math.max(0.75, zoomLevel + dir*0.1));
   document.documentElement.style.setProperty('--zoom', zoomLevel);
+  setTimeout(resizeXpenCanvas, 60);
 }
 
 function toggleFullscreen(){
@@ -661,6 +729,148 @@ function backToResult(){
   $('resultPage').classList.remove('hidden-page');
 }
 function restartTest(){ location.reload(); }
+
+/* ================= XPEN (Apple Pencil-only drawing) ================= */
+let xpenEnabled = false;
+let xpenTool = 'pen';
+let xpenColor = '#1a2233';
+let xpenThickness = 3.5;
+let xpenCanvas, xpenCtx;
+let xpenDrawing = false;
+let xpenActivePointerId = null;
+let qDrawings = [];
+
+function initXpen(){
+  xpenEnabled = $('xpenToggle') ? $('xpenToggle').checked : false;
+  qDrawings = QUESTIONS.map(() => null);
+  xpenCanvas = $('xpenCanvas');
+  xpenCtx = xpenCanvas.getContext('2d');
+  $('xpenIconBtn').classList.toggle('show', xpenEnabled);
+  resizeXpenCanvas();
+  window.addEventListener('resize', resizeXpenCanvas);
+  document.addEventListener('pointerdown', xpenPointerDown, {capture:true});
+}
+
+function resizeXpenCanvas(){
+  if(!xpenCanvas) return;
+  const panel = xpenCanvas.parentElement;
+  const w = panel.clientWidth, h = panel.clientHeight;
+  if(w === 0 || h === 0) return;
+  const dpr = window.devicePixelRatio || 1;
+  xpenCanvas.width = w * dpr;
+  xpenCanvas.height = h * dpr;
+  xpenCanvas.style.width = w + 'px';
+  xpenCanvas.style.height = h + 'px';
+  xpenCtx.setTransform(dpr,0,0,dpr,0,0);
+  loadXpenDrawing();
+}
+
+function toggleXpenPopover(){
+  $('xpenPopover').classList.toggle('show');
+  $('xpenIconBtn').classList.toggle('active', $('xpenPopover').classList.contains('show'));
+}
+document.addEventListener('click', function(e){
+  const pop = document.getElementById('xpenPopover');
+  const btn = document.getElementById('xpenIconBtn');
+  if(!pop || !btn) return;
+  if(pop.classList.contains('show') && !pop.contains(e.target) && e.target !== btn){
+    pop.classList.remove('show');
+    btn.classList.remove('active');
+  }
+});
+
+function setXpenTool(tool){
+  xpenTool = tool;
+  $('xpenToolPen').classList.toggle('active', tool==='pen');
+  $('xpenToolEraser').classList.toggle('active', tool==='eraser');
+}
+function setXpenColor(color, el){
+  xpenColor = color;
+  document.querySelectorAll('#xpenColorRow .xcolor-dot').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  setXpenTool('pen');
+}
+function setXpenThickness(val, el){
+  xpenThickness = val;
+  document.querySelectorAll('#xpenThickRow .xthick-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function clearXpenCanvas(){
+  if(!xpenCtx) return;
+  xpenCtx.clearRect(0,0,xpenCanvas.width,xpenCanvas.height);
+  qDrawings[current] = null;
+}
+
+function xpenPointerDown(e){
+  if(!xpenEnabled || e.pointerType !== 'pen') return;
+  if(!xpenCanvas || $('testPage').style.display === 'none') return;
+  const rect = xpenCanvas.getBoundingClientRect();
+  if(e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+  e.preventDefault();
+  e.stopPropagation();
+  xpenDrawing = true;
+  xpenActivePointerId = e.pointerId;
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  xpenCtx.lineCap = 'round';
+  xpenCtx.lineJoin = 'round';
+  if(xpenTool === 'eraser'){
+    xpenCtx.globalCompositeOperation = 'destination-out';
+    xpenCtx.lineWidth = xpenThickness * 6;
+  } else {
+    xpenCtx.globalCompositeOperation = 'source-over';
+    xpenCtx.strokeStyle = xpenColor;
+    xpenCtx.lineWidth = xpenThickness;
+  }
+  xpenCtx.beginPath();
+  xpenCtx.moveTo(x, y);
+  window.addEventListener('pointermove', xpenPointerMove, {capture:true});
+  window.addEventListener('pointerup', xpenPointerUp, {capture:true});
+  window.addEventListener('pointercancel', xpenPointerUp, {capture:true});
+}
+
+function xpenPointerMove(e){
+  if(!xpenDrawing || e.pointerId !== xpenActivePointerId) return;
+  e.preventDefault();
+  const rect = xpenCanvas.getBoundingClientRect();
+  xpenCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+  xpenCtx.stroke();
+}
+
+function xpenPointerUp(e){
+  if(e.pointerId !== xpenActivePointerId) return;
+  xpenDrawing = false;
+  xpenActivePointerId = null;
+  qDrawings[current] = xpenCanvas.toDataURL();
+  window.removeEventListener('pointermove', xpenPointerMove, {capture:true});
+  window.removeEventListener('pointerup', xpenPointerUp, {capture:true});
+  window.removeEventListener('pointercancel', xpenPointerUp, {capture:true});
+}
+
+function saveXpenDrawing(){
+  if(!xpenEnabled || !xpenCanvas) return;
+  qDrawings[current] = xpenCanvas.toDataURL();
+}
+
+function loadXpenDrawing(){
+  if(!xpenEnabled || !xpenCanvas || !xpenCtx) return;
+  const dpr = window.devicePixelRatio || 1;
+  xpenCtx.save();
+  xpenCtx.setTransform(1,0,0,1,0,0);
+  xpenCtx.clearRect(0,0,xpenCanvas.width,xpenCanvas.height);
+  xpenCtx.restore();
+  xpenCtx.setTransform(dpr,0,0,dpr,0,0);
+  const data = qDrawings[current];
+  if(!data) return;
+  const img = new Image();
+  img.onload = function(){
+    xpenCtx.save();
+    xpenCtx.setTransform(1,0,0,1,0,0);
+    xpenCtx.drawImage(img, 0, 0, xpenCanvas.width, xpenCanvas.height);
+    xpenCtx.restore();
+    xpenCtx.setTransform(dpr,0,0,dpr,0,0);
+  };
+  img.src = data;
+}
 </script>
 </body>
 </html>
